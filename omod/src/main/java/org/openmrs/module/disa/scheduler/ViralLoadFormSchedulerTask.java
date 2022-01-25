@@ -392,7 +392,7 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		String jsonViralLoadInfo = null;
 
 		try {
-			jsonViralLoadInfo = rest.getRequestGet(getAllDisaSismaCodes());
+			jsonViralLoadInfo = rest.getRequestGet(getAllDisaSismaCodes(),getDisaProvince());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -440,5 +440,10 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		List<String> sismaCodes = Arrays.asList(Context.getAdministrationService()
 				.getGlobalPropertyObject(Constants.DISA_SISMA_CODE).getPropertyValue().split(",")); 
 		return sismaCodes;
+	}
+	
+	private String getDisaProvince() {
+		return Context.getAdministrationService()
+		.getGlobalPropertyObject(Constants.DISA_PROVINCE).getPropertyValue();
 	}
 }

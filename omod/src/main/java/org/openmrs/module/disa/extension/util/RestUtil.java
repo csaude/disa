@@ -185,12 +185,13 @@ public class RestUtil {
 
 	/**
 	 * HTTP GET
+	 * @param string 
 	 * 
 	 * @param URLPath
 	 * @return
 	 * @throws Exception
 	 */
-	public String getRequestGet(List<String> sismaCodes) throws Exception {
+	public String getRequestGet(List<String> sismaCodes, String requestingProvinceName) throws Exception {
 		String URL = URLBase;
 		String response = "";
 		DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -211,6 +212,7 @@ public class RestUtil {
 
 			HttpParams params = new BasicHttpParams();
 			params.setParameter("sismaCodes", sismaCodes);
+			params.setParameter("requestingProvinceName", requestingProvinceName);
 			httpclient.setParams(params);
 			response = httpclient.execute(httpGet, responseHandler);
 
