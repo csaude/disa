@@ -89,5 +89,5 @@ public class Constants {
 	public static final String DISA_MAIL_HOST = "disa.api.mail.host";
 	public static final String DISA_MAIL_FROM_PASSWORD = "disa.api.mail.from.password";
 	public static final String DISA_MAIL_FROM_PORT = "disa.api.mail.from.port";
-	public static final String DISA_PROVINCE = null;
+	public static final String DISA_PROVINCE = "disa.province.request";
 }

@@ -275,13 +275,20 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 				obs_23832.setValueCoded(Context.getConceptService().getConceptByUuid(Constants.DRY_BLOOD_SPOT));
 				Context.getObsService().saveObs(obs_23832, "");
 			}
-
+			
 			Obs obs_856 = new Obs();
 			obs_856.setPerson(Context.getPersonService().getPersonByUuid(patientsByIdentifier.get(0).getUuid()));
 			obs_856.setObsDatetime(new Date());
 			obs_856.setConcept(Context.getConceptService().getConceptByUuid(Constants.VIRAL_LOAD_COPIES));
 			obs_856.setLocation(locationBySismaCode);
 			obs_856.setEncounter(encounter);
+			
+			if(disa.getViralLoadResultCopies()==null || StringUtils.isEmpty(disa.getViralLoadResultCopies())){
+				Double viralLoadLog=getViralLoadLogValue(disa);
+				obs_856.setValueNumeric(viralLoadLog);
+				Context.getObsService().saveObs(obs_856, "");
+			}
+			
 			if (!(disa.getHivViralLoadResult()==null) && StringUtils.isNotEmpty(disa.getHivViralLoadResult())) {
 
 				obs_856.setValueNumeric(Double.valueOf(-20));
@@ -313,25 +320,6 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 				obs_1306.setEncounter(encounter);
 				Context.getObsService().saveObs(obs_1306, "");
 			}
-
-			Obs obs_165243 = new Obs();
-			obs_165243.setPerson(Context.getPersonService().getPersonByUuid(patientsByIdentifier.get(0).getUuid()));
-			obs_165243.setObsDatetime(new Date());
-			obs_165243.setConcept(Context.getConceptService().getConceptByUuid(Constants.VIRAL_LOAD_LOG));
-			obs_165243.setLocation(locationBySismaCode);
-			obs_165243.setEncounter(encounter);
-			
-			if(disa.getViralLoadResultLog() == null){
-				obs_165243.setValueNumeric(Double.valueOf(0.0));
-			} else if (!(disa.getViralLoadResultLog()==null) && disa.getViralLoadResultLog().contains(">") ){
-				obs_165243.setValueNumeric(Double.valueOf(disa.getViralLoadResultLog().toString().replace(">", "").trim()));
-			} else if (!(disa.getViralLoadResultLog()==null) && disa.getViralLoadResultLog().contains("<") ){
-				obs_165243.setValueNumeric(Double.valueOf(disa.getViralLoadResultLog().toString().replace("<", "").trim()));
-			} else {
-				obs_165243.setValueNumeric(Double.valueOf(disa.getViralLoadResultLog()));
-			}
-
-			Context.getObsService().saveObs(obs_165243, "");
 
 			Obs obs_23839 = new Obs();
 			obs_23839.setPerson(Context.getPersonService().getPersonByUuid(patientsByIdentifier.get(0).getUuid()));
@@ -380,6 +368,18 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		}
 		
 		System.out.println("Syncing ended...");
+	}
+
+	private Double getViralLoadLogValue(Disa disa) {
+		if(disa.getViralLoadResultLog() == null){
+			return Double.valueOf(0.0);
+		} else if (!(disa.getViralLoadResultLog()==null) && disa.getViralLoadResultLog().contains(">") ){
+			return Double.valueOf(disa.getViralLoadResultLog().toString().replace(">", "").trim());
+		} else if (!(disa.getViralLoadResultLog()==null) && disa.getViralLoadResultLog().contains("<") ){
+			return Double.valueOf(disa.getViralLoadResultLog().toString().replace("<", "").trim());
+		} else {
+			return Double.valueOf(disa.getViralLoadResultLog());
+		}
 	}
 
 	private boolean hasNoResult(Disa disa) {
