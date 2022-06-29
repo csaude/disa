@@ -1,10 +1,14 @@
 package org.openmrs.module.disa.extension.util;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -299,8 +303,7 @@ public class RestUtil {
 		}
 		return response;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param urlPathProcessed
@@ -309,8 +312,8 @@ public class RestUtil {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
-	public String getRequestByForm(String urlPathProcessed, String requestId, String nid, 
-			String vlSisma, String referringId, String vlState, String startDate, String endDate) throws Exception {
+	public String getRequestByForm(String urlPathProcessed, String requestId, String nid, String vlSisma,
+			String referringId, String vlState, String startDate, String endDate) throws Exception {
 		String URL = URLBase + urlPathProcessed;
 		String response = "";
 		DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -318,31 +321,31 @@ public class RestUtil {
 		try {
 
 			URIBuilder uriBuilder = new URIBuilder(URL);
-			
-			if(!requestId.isEmpty()) {
+
+			if (!requestId.isEmpty()) {
 				uriBuilder.addParameter("requestId", requestId);
 			}
-			
-			if(!nid.isEmpty()) {
+
+			if (!nid.isEmpty()) {
 				uriBuilder.addParameter("nid", nid);
 			}
-			
-			if(!vlSisma.isEmpty() && !vlSisma.equals(Constants.TODOS)) {
+
+			if (!vlSisma.isEmpty() && !vlSisma.equals(Constants.TODOS)) {
 				uriBuilder.addParameter("healthFacilityLabCode", vlSisma);
 			}
-			
-			if(!referringId.isEmpty()) {
+
+			if (!referringId.isEmpty()) {
 				uriBuilder.addParameter("referringRequestID", referringId);
 			}
-			
-			if(!vlState.isEmpty() && !vlState.equals(Constants.ALL)) {
+
+			if (!vlState.isEmpty() && !vlState.equals(Constants.ALL)) {
 				uriBuilder.addParameter("viralLoadStatus", vlState);
 			}
-			
+
 			if (!startDate.isEmpty()) {
 				uriBuilder.addParameter("startDate", startDate);
 			}
-			
+
 			if (!endDate.isEmpty()) {
 				uriBuilder.addParameter("endDate", endDate);
 			}
@@ -373,5 +376,28 @@ public class RestUtil {
 
 	public void setURLBase(String uRLBase) {
 		URLBase = uRLBase;
+	}
+
+	public void getRequestPutRealocatePatientId(String urlPathPending, String requestFacilityCode,String requestId) 
+			throws ClientProtocolException, IOException, URISyntaxException, AuthenticationException {
+		String URL = URLBase + urlPathPending;
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		try {
+
+			URIBuilder uriBuilder = new URIBuilder(URL);
+			uriBuilder.addParameter("requestId", requestId);
+			uriBuilder.addParameter("requestFacilityCode", requestFacilityCode);
+			HttpPut httpPut = new HttpPut(uriBuilder.build());
+			UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
+			BasicScheme scheme = new BasicScheme();
+			Header authorizationHeader = scheme.authenticate(credentials, httpPut);
+			httpPut.setHeader(authorizationHeader);
+			httpclient.execute(httpPut);
+			httpclient.getConnectionManager().shutdown();
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+	
+		
 	}
 }

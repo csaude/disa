@@ -133,7 +133,7 @@ public class ViralLoadResultsController {
 		}
 
 		String nidDisa = (String) session.getAttribute("nid");
-		Disa selectedPatient =  (Disa) session.getAttribute("selectedPatient");
+		Disa selectedPatient = (Disa) session.getAttribute("selectedPatient");
 		delegate.doMapIdentifier(patientUuid, nidDisa, selectedPatient.getRequestId());
 
 		return new ModelAndView(new RedirectView(request.getContextPath() + "/module/disa/viralLoadResultsList.form"));
@@ -157,5 +157,59 @@ public class ViralLoadResultsController {
 		session.setAttribute("patients", patients);
 
 		return model;
+	}
+
+	@RequestMapping(value = "/module/disa/realocatePatientNidForm", method = RequestMethod.POST)
+	public ModelAndView realocatePatientNID(HttpServletRequest request, HttpSession session,
+			@RequestParam(required = false, value = "patientUuid") String patientUuid) throws Exception {
+
+		ModelAndView modelAndView = new ModelAndView(
+				new RedirectView(request.getContextPath() + "/module/disa/realocatePatientNidForm.form"));
+		if (patientUuid == null) {
+			modelAndView.addObject("errorSelectPatient", "disa.select.patient");
+			return modelAndView;
+		}
+
+		String nidDisa = (String) session.getAttribute("nid");
+		Disa selectedPatient = (Disa) session.getAttribute("selectedPatient");
+		delegate.doRealocateViralLoadFacilityCode(selectedPatient.getRequestId(), nidDisa);
+
+		return new ModelAndView(new RedirectView(request.getContextPath() + "/module/disa/viralLoadResultsList.form"));
+	}
+	
+	
+	@SuppressWarnings({ "unchecked" })
+	@RequestMapping(value = "/module/disa/realocatePatientNidForm", method = RequestMethod.GET)
+	public void patientIdentifierRealocate(@ModelAttribute("patient") Patient patient, HttpSession session,
+			HttpServletRequest request,
+			@RequestParam(required = false, value = "errorPatientRequired") String errorPatientRequired,
+			@RequestParam(required = false, value = "errorSelectPatient") String errorSelectPatient) {
+
+		String nid = (String) request.getParameter("nid");
+		List<Patient> matchingPatients = null;
+
+		if (nid == null) {
+			nid = (String) session.getAttribute("nid");
+			matchingPatients = (List<Patient>) session.getAttribute("patients");
+		}
+
+		List<Disa> vlDataLst = (List<Disa>) session.getAttribute("vlDataLst");
+		Disa selectedPatient = null;
+		for (Disa disa : vlDataLst) {
+			if (disa.getNid().equals(nid)) {
+				selectedPatient = disa;
+				break;
+			}
+		}
+
+		if (matchingPatients == null) {
+			matchingPatients = delegate.getPatients(selectedPatient);
+		}
+
+		session.setAttribute("selectedPatient", selectedPatient);
+		session.setAttribute("patients", matchingPatients);
+		session.setAttribute("nid", nid);
+		session.setAttribute("errorPatientRequired", errorPatientRequired);
+		session.setAttribute("errorSelectPatient", errorSelectPatient);
 	}
 }

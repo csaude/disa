@@ -46,6 +46,8 @@ public class ViralLoadResultsDelegate {
 				Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_USERNAME).getPropertyValue());
 		rest.setPassword(
 				Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_PASSWORD).getPropertyValue());
+		
+		Context.getLocationService().getAllLocations();
 	}
 
 	public List<Disa> getViralLoadDataList(Date startDate, Date endDate, String vlState) throws Exception {
@@ -59,19 +61,19 @@ public class ViralLoadResultsDelegate {
 		}.getType());
 
 	}
-	
-	public List<Disa> getViralLoadDataList(String requestId, String nid, String vlSisma, 
-			String referringId, String vlState, Date startDate, Date endDate) throws Exception {
 
-		String jsonViralLoadInfo = rest.getRequestByForm("/search-form", requestId, nid, vlSisma, referringId, vlState, 
+	public List<Disa> getViralLoadDataList(String requestId, String nid, String vlSisma, String referringId,
+			String vlState, Date startDate, Date endDate) throws Exception {
+
+		String jsonViralLoadInfo = rest.getRequestByForm("/search-form", requestId, nid, vlSisma, referringId, vlState,
 				formatDate(startDate, 1), formatDate(endDate, 2));
 		return new Gson().fromJson(jsonViralLoadInfo, new TypeToken<ArrayList<Disa>>() {
 		}.getType());
 	}
 
 	public List<Patient> getPatients(Disa selectedPatient) {
-		return Context.getPatientService()
-				.getPatients(selectedPatient.getFirstName() + " " + selectedPatient.getLastName(), null, null, Boolean.FALSE);
+		return Context.getPatientService().getPatients(
+				selectedPatient.getFirstName() + " " + selectedPatient.getLastName(), null, null, Boolean.FALSE);
 	}
 
 	public void addPatientToList(List<Patient> patients, Patient patient) {
@@ -90,11 +92,13 @@ public class ViralLoadResultsDelegate {
 	public void doMapIdentifier(String patientUuid, String nidDisa, String requestId) {
 		Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
 		PatientIdentifier patientIdentifier = new PatientIdentifier();
-		PatientIdentifierType identifierType = Context.getPatientService().getPatientIdentifierTypeByUuid(Constants.DISA_NID);
+		PatientIdentifierType identifierType = Context.getPatientService()
+				.getPatientIdentifierTypeByUuid(Constants.DISA_NID);
 		List<PatientIdentifierType> patientIdentifierTypes = new ArrayList<PatientIdentifierType>();
 		patientIdentifierTypes.add(identifierType);
 
-		List<PatientIdentifier> patIdentidier = Context.getPatientService().getPatientIdentifiers(nidDisa, patientIdentifierTypes, null, null, null);
+		List<PatientIdentifier> patIdentidier = Context.getPatientService().getPatientIdentifiers(nidDisa,
+				patientIdentifierTypes, null, null, null);
 		if (patIdentidier.isEmpty()) {
 			patientIdentifier.setPatient(patient);
 			patientIdentifier.setIdentifier(nidDisa);
@@ -107,6 +111,14 @@ public class ViralLoadResultsDelegate {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void doRealocateViralLoadFacilityCode(String requestId, String requestFacilityCode) {
+		try {
+			rest.getRequestPutRealocatePatientId("/realocate", requestFacilityCode, requestId);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -146,7 +158,7 @@ public class ViralLoadResultsDelegate {
 			workbook.close();
 		}
 	}
-	
+
 	public void createExcelFileStaging(List<Disa> listDisa, HttpServletResponse response,
 			MessageSourceService messageSourceService) throws Exception {
 		Locale locale = Context.getLocale();
@@ -187,14 +199,15 @@ public class ViralLoadResultsDelegate {
 			response.setContentType("application/ms-excel");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0");
-			response.setHeader("Content-Disposition", "attachment; filename=Viral Load Data Details Staging Server.xls");
+			response.setHeader("Content-Disposition",
+					"attachment; filename=Viral Load Data Details Staging Server.xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
 			workbook.close();
 		}
 	}
-	
+
 	private void writeDisaList(Disa disa, Row row, Locale locale, MessageSourceService messageSourceService) {
 		Cell cell = row.createCell(0);
 		cell.setCellValue(disa.getNid());
@@ -235,7 +248,7 @@ public class ViralLoadResultsDelegate {
 			}
 		}
 	}
-	
+
 	private void writeDisaListStaging(Disa disa, Row row, Locale locale, MessageSourceService messageSourceService) {
 		Cell cell = row.createCell(0);
 		cell.setCellValue(disa.getLocation());
@@ -267,31 +280,31 @@ public class ViralLoadResultsDelegate {
 
 		cell = row.createCell(9);
 		cell.setCellValue(disa.getRequestId());
-		
+
 		cell = row.createCell(10);
 		cell.setCellValue(disa.getProcessingDate());
-		
+
 		cell = row.createCell(11);
 		cell.setCellValue(disa.getViralLoadResultDate());
-		
+
 		cell = row.createCell(12);
 		cell.setCellValue(disa.getViralLoadResultCopies());
-		
+
 		cell = row.createCell(13);
 		cell.setCellValue(disa.getViralLoadResultLog());
-		
+
 		cell = row.createCell(14);
 		cell.setCellValue(disa.getHivViralLoadResult());
-		
+
 		cell = row.createCell(15);
 		cell.setCellValue(disa.getViralLoadStatus());
-		
+
 		cell = row.createCell(16);
 		cell.setCellValue(disa.getCreatedAt());
-		
+
 		cell = row.createCell(17);
 		cell.setCellValue(disa.getUpdatedAt());
-		
+
 		cell = row.createCell(18);
 		cell.setCellValue(disa.getNotProcessingCause());
 	}
@@ -347,7 +360,7 @@ public class ViralLoadResultsDelegate {
 		causaNaoProcessamento.setCellStyle(cellStyle);
 		causaNaoProcessamento.setCellValue(messageSourceService.getMessage("disa.not.processing.cause", null, locale));
 	}
-	
+
 	private void createHeaderRowStaging(Sheet sheet, Locale locale, MessageSourceService messageSourceService) {
 		CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
 		cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
@@ -398,42 +411,43 @@ public class ViralLoadResultsDelegate {
 		Cell cellRequestId = row.createCell(9);
 		cellRequestId.setCellStyle(cellStyle);
 		cellRequestId.setCellValue(messageSourceService.getMessage("disa.request.id", null, locale));
-		
+
 		Cell cellAnalysisDateTime = row.createCell(10);
 		cellAnalysisDateTime.setCellStyle(cellStyle);
 		cellAnalysisDateTime.setCellValue(messageSourceService.getMessage("disa.analysis.date.time", null, locale));
-		
+
 		Cell cellAuthorisedDateTime = row.createCell(11);
 		cellAuthorisedDateTime.setCellStyle(cellStyle);
 		cellAuthorisedDateTime.setCellValue(messageSourceService.getMessage("disa.authorised.date.time", null, locale));
-		
+
 		Cell cellViralLoadCopy = row.createCell(12);
 		cellViralLoadCopy.setCellStyle(cellStyle);
 		cellViralLoadCopy.setCellValue(messageSourceService.getMessage("disa.viralload.result.copy", null, locale));
-		
+
 		Cell cellViralLoadLog = row.createCell(13);
 		cellViralLoadLog.setCellStyle(cellStyle);
 		cellViralLoadLog.setCellValue(messageSourceService.getMessage("disa.viralload.result.log", null, locale));
-		
+
 		Cell cellViralLoadCoded = row.createCell(14);
 		cellViralLoadCoded.setCellStyle(cellStyle);
 		cellViralLoadCoded.setCellValue(messageSourceService.getMessage("disa.viralload.result.coded", null, locale));
-		
+
 		Cell cellViralLoadStatus = row.createCell(15);
 		cellViralLoadStatus.setCellStyle(cellStyle);
 		cellViralLoadStatus.setCellValue(messageSourceService.getMessage("disa.status", null, locale));
-		
+
 		Cell cellViralLoadCreatedAt = row.createCell(16);
 		cellViralLoadCreatedAt.setCellStyle(cellStyle);
 		cellViralLoadCreatedAt.setCellValue(messageSourceService.getMessage("disa.created.at", null, locale));
-		
+
 		Cell cellViralLoadCreated = row.createCell(17);
 		cellViralLoadCreated.setCellStyle(cellStyle);
 		cellViralLoadCreated.setCellValue(messageSourceService.getMessage("disa.updated.at", null, locale));
-		
+
 		Cell cellViralLoadProcessing = row.createCell(18);
 		cellViralLoadProcessing.setCellStyle(cellStyle);
-		cellViralLoadProcessing.setCellValue(messageSourceService.getMessage("disa.not.processing.cause", null, locale));
+		cellViralLoadProcessing
+				.setCellValue(messageSourceService.getMessage("disa.not.processing.cause", null, locale));
 	}
 
 	private String formatDate(Date date, int i) {

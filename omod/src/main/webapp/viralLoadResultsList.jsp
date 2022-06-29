@@ -43,6 +43,10 @@
 				        	<th><spring:message code="disa.not.processing.cause" /></th>
 				        	<th><spring:message code="disa.map.nid" /></th>
 				        </c:if>
+				        
+				         <c:if test="${vlState == 'NOT_PROCESSED'}">
+				        	<th><spring:message code="disa.realocate.us" /></th>
+				        </c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -62,8 +66,17 @@
 					        		<c:if test="${vlData.notProcessingCause == 'NID_NOT_FOUND'}">
 					        			<a href='mapPatientIdentifierForm.form?nid=<c:out value="${vlData.nid}"/>'><spring:message code="disa.map.nid" /></a>
 					        		</c:if>
-					        	</td>
-					        </c:if>		        
+					        	</td>				        	
+					        	
+					        </c:if>		
+					        
+					         <c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
+					        	<td>
+					        		<c:if test="${vlData.notProcessingCause == 'NID_NOT_FOUND'}">
+					        			<a href='realocatePatientNidForm.form?nid=<c:out value="${vlData.nid}"/>'><spring:message code="disa.realocate.patient" /></a>
+					        		</c:if>
+					        	</td>					        	
+					        </c:if>	        
 					    </tr>
 					</c:forEach>
 				</tbody>
