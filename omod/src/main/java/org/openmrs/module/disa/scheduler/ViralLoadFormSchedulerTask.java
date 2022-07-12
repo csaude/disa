@@ -18,6 +18,8 @@ import org.openmrs.Location;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
+import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.disa.Disa;
 import org.openmrs.module.disa.FsrLog;
@@ -63,18 +65,9 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		try {
 			createViralLoadForm();
 		} catch (Exception e) {
-		  //e.printStackTrace();
+		     //e.printStackTrace();
 			  String exceprionMessage = ExceptionUtils.getStackTrace(e); //send email
-			  GenericUtil.SendMail(
-				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_TO).getPropertyValue(),
-				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM).getPropertyValue(),
-				  Constants.DISA_MAIL_SUBJECT
-				  +Context.getLocationService().getDefaultLocation().getDescription(),
-				  Constants.DISA_MAIL_ERROR
-				  +new SimpleDateFormat("dd/MM/yyyy").format(new Date())+"\n\n\n" + exceprionMessage,
-				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_HOST).getPropertyValue(), 
-				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM_PASSWORD).getPropertyValue(), 
-				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM_PORT).getPropertyValue());
+			  sendEmail(exceprionMessage);
 		} finally {
 			
 		}
@@ -91,10 +84,24 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		System.out.println("There is " + jsonViralLoad.size() + " pending items to be processed");
 		
 		System.out.println("Syncing started...");
+	
+		//Tirar a configuracao do provider da global_property e buscar o provider pelo metodo Context.getUserService().getUserByUsername(username) 
+		//sendo o user generic.provider ou provedor.desconhecido
+		 User user=Context.getUserService().getUserByUsername("generic.provider");			 
+		 if(user==null) {				 
+			 user= Context.getUserService().getUserByUsername("provedor.desconhecido");
+		 }
+		 
+		 if(user==null) {
+			 String message="O provedor generic.provider ou provedor.desconhecido nao foi encontrado no openmrs.";
+			 sendEmail(message);
+			 return;
+		 }
+		 
+        Provider provider=Context.getProviderService().getProvidersByPerson(user.getPerson()).iterator().next();
 		
 		for (Disa disa : jsonViralLoad) {
 		
-		if(!disaService.existsByRequestId(disa.getRequestId())) {
 			Encounter encounter = new Encounter();
 			encounter.setEncounterDatetime(DateUtil.dateWithLeadingZeros()); 
 			List<Patient> patientsByIdentifier = Context.getPatientService()
@@ -119,12 +126,8 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 			encounter.setEncounterType(
 					Context.getEncounterService().getEncounterTypeByUuid(Constants.DISA_ENCOUNTER_TYPE));
 			encounter.setLocation(locationBySismaCode);
-			encounter.setForm(Context.getFormService().getFormByUuid(Constants.DISA_FORM));
-
-			encounter.setProvider(
-					Context.getEncounterService().getEncounterRoleByUuid(EncounterRole.UNKNOWN_ENCOUNTER_ROLE_UUID),
-					Context.getProviderService().getProviderByUuid(Context.getAdministrationService()
-							.getGlobalPropertyObject(Constants.DISA_PROVIDER).getPropertyValue()));
+			encounter.setForm(Context.getFormService().getFormByUuid(Constants.DISA_FORM));		
+			encounter.setProvider(Context.getEncounterService().getEncounterRoleByUuid(EncounterRole.UNKNOWN_ENCOUNTER_ROLE_UUID), provider);
 
 			Context.getEncounterService().saveEncounter(encounter);
 
@@ -376,13 +379,24 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 			fsrLog.setCreator(Context.getAuthenticatedUser().getId());     
 			fsrLog.setDateCreated(new Date());
 			disaService.saveFsrLog(fsrLog);					
-			
-			}
-		
+				
 		  updateProcessed();
 		}
 		
 		System.out.println("Syncing ended...");
+	}
+	
+	private void sendEmail(final String message) {
+		 GenericUtil.SendMail(
+				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_TO).getPropertyValue(),
+				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM).getPropertyValue(),
+				  Constants.DISA_MAIL_SUBJECT
+				  +Context.getLocationService().getDefaultLocation().getDescription(),
+				  Constants.DISA_MAIL_ERROR
+				  +new SimpleDateFormat("dd/MM/yyyy").format(new Date())+"\n\n\n" + message,
+				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_HOST).getPropertyValue(), 
+				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM_PASSWORD).getPropertyValue(), 
+				  Context.getAdministrationService().getGlobalPropertyObject(Constants.DISA_MAIL_FROM_PORT).getPropertyValue());
 	}
 
 	private boolean hasNoResult(Disa disa) {
