@@ -17,7 +17,7 @@
 	<spring:message code="disa.pesquisa.resultados.laboratoriais11" />
 </b>
 
-<form:form commandName="searchForm" method="post">
+<form:form commandName="searchForm" method="GET">
 	<fieldset>
 		<div class="cds--css-grid">
 			<div class="cds-css-grid-column">
@@ -50,7 +50,7 @@
 				</label>
 			</div>
 			<div class="cds-css-grid-column">
-				<form:input path="startDate"  size="10" id="startDate" onclick="showCalendar(this);"/>
+				<form:input path="startDate"  size="10" id="startDate" onclick="showCalendar(this);" autocomplete="off"/>
 			</div>
 			<spring:hasBindErrors name="searchForm">
 				<c:if test="${errors.hasFieldErrors('startDate')}">
@@ -65,7 +65,7 @@
 				</label>
 			</div>
 			<div class="cds-css-grid-column">
-				<form:input path="endDate" size="10" id="endDate" onclick="showCalendar(this);"/>
+				<form:input path="endDate" size="10" id="endDate" onclick="showCalendar(this);" autocomplete="off"/>
 			</div>
 			<spring:hasBindErrors name="searchForm">
 				<c:if test="${errors.hasFieldErrors('endDate')}">
