@@ -133,6 +133,13 @@
 											</a>
 										</li>
 									</c:if>
+									<c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
+										<li>
+											<a href="${pageContext.request.contextPath}/module/disa/managevlresults/${vlData.requestId}/reallocate.form">
+												<spring:message code="disa.viralload.reallocate" />
+											</a>
+										</li>
+									</c:if>
 									<li>
 										<a href="#" data-requestid="${vlData.requestId}" class="delete-vl">
 											<spring:message code="disa.viralload.delete" />
@@ -145,7 +152,7 @@
 				</tbody>
 			</table>
 			<br />
-			<div class="submit-btn" align="center">
+			<div class="submit-btn center">
 				<input type="button"
 					value='<spring:message code="general.previous"/>'
 					name="previous"  onclick="history.back()"/>
