@@ -31,6 +31,7 @@
 			const response = await fetch(`\${requestId}.form`, options);
 
 			if (response.status === 200) {
+				sessionStorage.setItem("flashMessage", "<spring:message code='disa.viralload.reschedule.successful'/>");
 				location.reload();
 			} else {
 				throw new Error(`Reschedule was not successful.`)
@@ -52,6 +53,7 @@
         if (confirm(`<spring:message code='disa.viralload.delete.confirmation.javascript'/>`)) {
             const response = await fetch(`\${requestId}.form`, { method: "DELETE" });
             if (response.status === 204) {
+				sessionStorage.setItem("flashMessage", "<spring:message code='disa.viralload.delete.successful'/>");
                 location.reload();
             } else {
                 alert("<spring:message code='disa.viralload.delete.error'/>");
@@ -73,17 +75,30 @@
 		$j('#vlResultsTable').dataTable({
 			"iDisplayLength" : 10
 		});
-	})
+
+		// Display a temporary success message if present on sessionStorage
+		const alertBox = document.getElementById("alert-box");
+		const message = sessionStorage.getItem("flashMessage");
+		if(message) {
+			const success = document.createElement("div");
+			success.innerText = message;
+			success.className = "success";
+			alertBox.appendChild(success);
+			sessionStorage.removeItem("flashMessage");
+		}
+	});
 </script>
 
 <h2><openmrs:message code="disa.list.viral.load.results.manage"/></h2>
 <br />
 
-<c:if test="${not empty flashMessage}">
-	<div class="success">
-		<openmrs:message code="${flashMessage}"/>
-	</div>
-</c:if>
+<div id="alert-box">
+	<c:if test="${not empty flashMessage}">
+		<div class="success">
+			<openmrs:message code="${flashMessage}"/>
+		</div>
+	</c:if>
+</div>
 
 <c:if test="${not empty disaList}">
 	<b class="boxHeader"><spring:message code="disa.lista.resultados.laboratoriais333" /></b>
