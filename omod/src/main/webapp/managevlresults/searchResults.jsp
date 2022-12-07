@@ -88,87 +88,84 @@
 <c:if test="${not empty disaList}">
 	<b class="boxHeader"><spring:message code="disa.lista.resultados.laboratoriais333" /></b>
 	<fieldset>
-		<!-- TODO: Handle download. The controller expects disaList in the session -->
-		<form method="post" action="/openmrs/module/disa/viralLoadStagingServerResult.form">
-			<table  id="vlResultsTable" class="display" width="100%" cellpadding="2" cellspacing="0"
-				style="font-size: 13px;">
-				<thead>
+		<table  id="vlResultsTable" class="display" width="100%" cellpadding="2" cellspacing="0"
+			style="font-size: 13px;">
+			<thead>
+				<tr>
+					<th><spring:message code="disa.requesting.facility.name"/></th>
+					<th><spring:message code="disa.requesting.district.name"/></th>
+					<th><spring:message code="disa.sisma.code"/></th>
+					<th><spring:message code="disa.referring.request.id"/></th>
+					<th><spring:message code="disa.nid" /></th>
+					<th><spring:message code="general.name" /></th>
+					<th><spring:message code="disa.gender" /></th>
+					<th><spring:message code="disa.age" /></th>
+					<th><spring:message code="disa.request.id" /></th>
+					<th><spring:message code="disa.analysis.date.time" /></th>
+					<th><spring:message code="disa.authorised.date.time" /></th>
+					<th><spring:message code="disa.viralload.result.copy" /></th>
+					<th><spring:message code="disa.status" /></th>
+					<th><spring:message code="disa.created.at" /></th>
+					<th><spring:message code="disa.updated.at" /></th>
+					<th><spring:message code="disa.not.processing.cause" /></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${disaList}" var="vlData">
 					<tr>
-						<th><spring:message code="disa.requesting.facility.name"/></th>
-						<th><spring:message code="disa.requesting.district.name"/></th>
-						<th><spring:message code="disa.sisma.code"/></th>
-						<th><spring:message code="disa.referring.request.id"/></th>
-						<th><spring:message code="disa.nid" /></th>
-						<th><spring:message code="general.name" /></th>
-						<th><spring:message code="disa.gender" /></th>
-						<th><spring:message code="disa.age" /></th>
-						<th><spring:message code="disa.request.id" /></th>
-						<th><spring:message code="disa.analysis.date.time" /></th>
-						<th><spring:message code="disa.authorised.date.time" /></th>
-						<th><spring:message code="disa.viralload.result.copy" /></th>
-				        <th><spring:message code="disa.status" /></th>
-				        <th><spring:message code="disa.created.at" /></th>
-				        <th><spring:message code="disa.updated.at" /></th>
-				        <th><spring:message code="disa.not.processing.cause" /></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${disaList}" var="vlData">
-					    <tr>
-					    	<td>${vlData.requestingFacilityName}</td>
-					    	<td>${vlData.requestingDistrictName}</td>
-					    	<td>${vlData.healthFacilityLabCode}</td>
-					    	<td>${vlData.referringRequestID}</td>
-					        <td>${vlData.nid}</td>
-					    	<td>${vlData.firstName} ${vlData.lastName}</td>
-					        <td>${vlData.gender}</td>
-					        <td>${vlData.getAge()}</td>
-					        <td>${vlData.requestId}</td>
-					        <td>${vlData.processingDate}</td>
-					        <td>${vlData.viralLoadResultDate}</td>
-					        <td>${vlData.finalViralLoadResult}</td>
-					        <td>${vlData.viralLoadStatus}</td>
-					        <td>${vlData.createdAt}</td>
-					        <td>${vlData.updatedAt}</td>
-					        <td>${vlData.notProcessingCause}</td>
-							<td>
-								<ul class="actions">
-									<c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
-										<li>
-											<a href="#" data-requestid="${vlData.requestId}" class="reschedule-vl">
-												<spring:message code="disa.viralload.reschedule" />
-											</a>
-										</li>
-									</c:if>
-									<c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
-										<li>
-											<a href="${pageContext.request.contextPath}/module/disa/managevlresults/${vlData.requestId}/reallocate.form">
-												<spring:message code="disa.viralload.reallocate" />
-											</a>
-										</li>
-									</c:if>
+						<td>${vlData.requestingFacilityName}</td>
+						<td>${vlData.requestingDistrictName}</td>
+						<td>${vlData.healthFacilityLabCode}</td>
+						<td>${vlData.referringRequestID}</td>
+						<td>${vlData.nid}</td>
+						<td>${vlData.firstName} ${vlData.lastName}</td>
+						<td>${vlData.gender}</td>
+						<td>${vlData.getAge()}</td>
+						<td>${vlData.requestId}</td>
+						<td>${vlData.processingDate}</td>
+						<td>${vlData.viralLoadResultDate}</td>
+						<td>${vlData.finalViralLoadResult}</td>
+						<td>${vlData.viralLoadStatus}</td>
+						<td>${vlData.createdAt}</td>
+						<td>${vlData.updatedAt}</td>
+						<td>${vlData.notProcessingCause}</td>
+						<td>
+							<ul class="actions">
+								<c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
 									<li>
-										<a href="#" data-requestid="${vlData.requestId}" class="delete-vl">
-											<spring:message code="disa.viralload.delete" />
+										<a href="#" data-requestid="${vlData.requestId}" class="reschedule-vl">
+											<spring:message code="disa.viralload.reschedule" />
 										</a>
 									</li>
-								</ul>
-							</td>
-					    </tr>
-					</c:forEach>
-				</tbody>
-			</table>
-			<br />
-			<div class="submit-btn center">
-				<input type="button"
-					value='<spring:message code="general.previous"/>'
-					name="previous"  onclick="window.location.href = '${pageContext.request.contextPath}/module/disa/managevlresults/search.form';"/>
-				<input type="submit"
-					value='<spring:message code="disa.btn.export"/>'
-					name="exportViralLoadResults" />
-			</div>
-		</form>
+								</c:if>
+								<c:if test="${vlData.viralLoadStatus == 'NOT_PROCESSED'}">
+									<li>
+										<a href="${pageContext.request.contextPath}/module/disa/managevlresults/${vlData.requestId}/reallocate.form">
+											<spring:message code="disa.viralload.reallocate" />
+										</a>
+									</li>
+								</c:if>
+								<li>
+									<a href="#" data-requestid="${vlData.requestId}" class="delete-vl">
+										<spring:message code="disa.viralload.delete" />
+									</a>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<br />
+		<div class="submit-btn center">
+			<input type="button"
+				value='<spring:message code="general.previous"/>'
+				name="previous"  onclick="window.location.href = '${pageContext.request.contextPath}/module/disa/managevlresults/search.form';"/>
+			<input type="button"
+				value='<spring:message code="disa.btn.export"/>'
+				name="exportViralLoadResults" onclick="window.location.href = '${exportUri}'"/>
+		</div>
 	</fieldset>
 </c:if>
 
