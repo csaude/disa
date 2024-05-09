@@ -33,7 +33,7 @@ public class OrgUnitController {
         this.orgUnitService = orgUnitService;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/search.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OrgUnit>> searchOrgUnits(@RequestParam String term) {
         return ResponseEntity.ok().body(orgUnitService.searchOrgUnits(term));
     }

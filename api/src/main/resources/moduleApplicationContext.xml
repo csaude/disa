@@ -59,9 +59,9 @@
 		<property name="moduleService">
 			<list>
 				<value>${project.parent.groupId}.${project.parent.artifactId}.api.DisaService</value>
-				<ref local="disaService" />
+				<ref bean="disaService" />
 				<value>${project.parent.groupId}.${project.parent.artifactId}.api.LabResultService</value>
-				<ref local="labResultService" />
+				<ref bean="labResultService" />
 			</list>
 		</property>
 	</bean>

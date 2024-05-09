@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@RequestMapping("/module/disa/managelabresults/{id}/reallocate")
+@RequestMapping("/module/disa/managelabresults/{id}/reallocate.form")
 @SessionAttributes({ "flashMessage" })
 public class ReallocateLabResultsController {
 

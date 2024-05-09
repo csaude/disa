@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/module/disa/syncstatus")
+@RequestMapping("/module/disa/syncstatus.form")
 public class SyncStatusController {
 
     private SyncStatusService syncStatusService;
