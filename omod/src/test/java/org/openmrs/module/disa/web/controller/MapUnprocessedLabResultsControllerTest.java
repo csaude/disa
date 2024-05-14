@@ -59,7 +59,7 @@ public class MapUnprocessedLabResultsControllerTest extends BaseContextMockTest 
         when(messageSourceService.getMessage(anyString(), any(Object[].class), any(Locale.class)))
                 .thenReturn("Unexpected Error!");
 
-        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map"))
+        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map.form"))
                 .andExpect(model().attribute("flashMessage", "Unexpected Error!"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/module/disa/managelabresults/map"));
@@ -79,7 +79,7 @@ public class MapUnprocessedLabResultsControllerTest extends BaseContextMockTest 
         when(messageSourceService.getMessage(anyString(), any(Object[].class), any(Locale.class)))
                 .thenReturn("Map Successful!");
 
-        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map")
+        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map.form")
                 .param("patientUuid", "f6af3bb7-7690-4639-b922-7a631fe5a984"))
                 .andExpect(model().attribute("flashMessage", "Map Successful!"))
                 .andExpect(status().is3xxRedirection())
