@@ -2,7 +2,7 @@ package org.openmrs.module.disa.api.sync;
 
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Encounter;
@@ -25,7 +25,7 @@ import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.LabResultService;
 import org.openmrs.module.disa.api.LabResultStatus;
 import org.openmrs.module.disa.api.NotProcessingCause;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class FinalLabResultHandlerTest extends BaseContextMockTest {
 
@@ -47,7 +47,7 @@ public class FinalLabResultHandlerTest extends BaseContextMockTest {
     @InjectMocks
     private FinalLabResultHandler finalLabResultHandler;
 
-    @Before
+    @BeforeEach
     public void before() {
         finalLabResultHandler.setNext(next);
     }

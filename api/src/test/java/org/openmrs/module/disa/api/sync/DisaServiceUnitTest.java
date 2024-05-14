@@ -1,13 +1,13 @@
 package org.openmrs.module.disa.api.sync;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Encounter;
@@ -22,7 +22,7 @@ import org.openmrs.module.disa.api.LabResultStatus;
 import org.openmrs.module.disa.api.SyncLog;
 import org.openmrs.module.disa.api.db.DisaDAO;
 import org.openmrs.module.disa.api.impl.DisaServiceImpl;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class DisaServiceUnitTest extends BaseContextMockTest {
 

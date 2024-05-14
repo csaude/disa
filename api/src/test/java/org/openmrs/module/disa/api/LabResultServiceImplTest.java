@@ -1,7 +1,8 @@
 package org.openmrs.module.disa.api;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -17,24 +18,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openmrs.module.disa.api.client.DisaAPIHttpClient;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.impl.LabResultServiceImpl;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 public class LabResultServiceImplTest extends BaseContextMockTest {
-
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Mock
     private DisaAPIHttpClient client;
@@ -50,14 +45,16 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
         LabResult expected = new HIVVLLabResult();
         when(client.getResultById(1l)).thenReturn(expected);
         LabResult result = labResultService.getById(1l);
-        Assert.assertEquals(expected, result);
+        assertThat(expected, is(result));
     }
 
-    @Test(expected = DisaModuleAPIException.class)
     public void getByRequestIdShouldThrowException() throws IOException, URISyntaxException {
         when(client.getResultById(1l))
                 .thenThrow(new URISyntaxException("", ""));
-        labResultService.getById(1l);
+
+        assertThrows(DisaModuleAPIException.class, () -> {
+            labResultService.getById(1l);
+        });
     }
 
     @Test
@@ -66,11 +63,13 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
         verify(client, Mockito.times(1)).deleteResultById(1l);
     }
 
-    @Test(expected = DisaModuleAPIException.class)
     public void deleteByRequestIdSholdThrowException() throws IOException, URISyntaxException {
         doThrow(new URISyntaxException("", ""))
                 .when(client).deleteResultById(1l);
-        labResultService.deleteById(1l);
+        assertThrows(DisaModuleAPIException.class, () -> {
+            labResultService.deleteById(1l);
+        });
+
     }
 
     @Test
@@ -106,39 +105,39 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
     @Test
     public void searchShouldFailIfUserIsNotAuthorized() throws IOException, URISyntaxException {
         when(client.searchLabResults(
-            any(LocalDateTime.class),
-            any(LocalDateTime.class),
-            anyString(),
-            anyString(),
-            anyString(),
-            any(TypeOfResult.class),
-            anyString(),
-            anyListOf(String.class),
-            anyString(),
-            anyInt(),
-            anyInt(),
-            anyString(),
-            anyString()))
-        .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN, "Forbidden"));
+                any(LocalDateTime.class),
+                any(LocalDateTime.class),
+                anyString(),
+                anyString(),
+                anyString(),
+                any(TypeOfResult.class),
+                anyString(),
+                anyListOf(String.class),
+                anyString(),
+                anyInt(),
+                anyInt(),
+                anyString(),
+                anyString()))
+                .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN, "Forbidden"));
 
         String sismaCode = "1100811";
 
-        exceptionRule.expect(DisaModuleAPIException.class);
-        // exceptionRule.expectMessage("The user does not have permission");
+        assertThrows(DisaModuleAPIException.class, () -> {
+            labResultService.search(
+                    LocalDate.now(),
+                    LocalDate.now(),
+                    "",
+                    "",
+                    "",
+                    TypeOfResult.ALL,
+                    "",
+                    Collections.singletonList(sismaCode),
+                    "",
+                    0,
+                    0,
+                    "",
+                    "");
+        });
 
-        labResultService.search(
-            LocalDate.now(),
-            LocalDate.now(),
-            "",
-            "",
-            "",
-            TypeOfResult.ALL,
-            "",
-            Collections.singletonList(sismaCode),
-            "",
-            0,
-            0,
-            "",
-            "");
     }
 }

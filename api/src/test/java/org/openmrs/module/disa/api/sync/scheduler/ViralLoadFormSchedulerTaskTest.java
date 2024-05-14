@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.api.db.ContextDAO;
@@ -17,7 +17,7 @@ import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.LabResultService;
 import org.openmrs.module.disa.api.sync.LabResultProcessor;
 import org.openmrs.scheduler.TaskDefinition;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class ViralLoadFormSchedulerTaskTest extends BaseContextMockTest {
 
@@ -40,7 +40,7 @@ public class ViralLoadFormSchedulerTaskTest extends BaseContextMockTest {
 
 	private LabResult labResult;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		labResult = new HIVVLLabResult();
 		labResult.setRequestId("MZDISAPQM0000000");
