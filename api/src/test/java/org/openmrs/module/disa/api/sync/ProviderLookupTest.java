@@ -1,7 +1,7 @@
 package org.openmrs.module.disa.api.sync;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Person;
@@ -22,7 +22,7 @@ import org.openmrs.api.UserService;
 import org.openmrs.module.disa.api.HIVVLLabResult;
 import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.LabResultStatus;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class ProviderLookupTest extends BaseContextMockTest {
 
@@ -38,7 +38,7 @@ public class ProviderLookupTest extends BaseContextMockTest {
     @InjectMocks
     private ProviderLookup providerHandler;
 
-    @Before
+    @BeforeEach
     public void before() {
         providerHandler.setNext(next);
     }

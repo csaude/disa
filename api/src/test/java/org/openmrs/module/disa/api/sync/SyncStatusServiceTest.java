@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -15,15 +15,15 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.disa.api.DisaService;
 import org.openmrs.module.disa.api.sync.scheduler.ViralLoadFormSchedulerTask;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class SyncStatusServiceTest extends BaseContextMockTest {
 
@@ -40,7 +40,7 @@ public class SyncStatusServiceTest extends BaseContextMockTest {
     @InjectMocks
     private SyncStatusService syncStatusService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         when(userContext.getLocale()).thenReturn(Locale.getDefault());
         when(messageSourceService.getMessage("Scheduler.scheduleForm.repeatInterval.units.hours")).thenReturn(HOUR);

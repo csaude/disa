@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
-@RequestMapping("/module/disa/managelabresults/{id}/map")
+@RequestMapping("/module/disa/managelabresults/{id}/map.form")
 @SessionAttributes({ "flashMessage" })
 public class MapUnprocessedLabResultsController {
 

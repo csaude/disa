@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
@@ -22,7 +22,7 @@ import org.openmrs.module.disa.api.CD4LabResult;
 import org.openmrs.module.disa.api.DisaService;
 import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.LabResultService;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -44,7 +44,7 @@ public class MapUnprocessedLabResultsControllerTest extends BaseContextMockTest 
 
     long labResultId = 53038017l;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(mapUnprocessedLabResultsController).build();
     }
@@ -59,7 +59,7 @@ public class MapUnprocessedLabResultsControllerTest extends BaseContextMockTest 
         when(messageSourceService.getMessage(anyString(), any(Object[].class), any(Locale.class)))
                 .thenReturn("Unexpected Error!");
 
-        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map"))
+        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map.form"))
                 .andExpect(model().attribute("flashMessage", "Unexpected Error!"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/module/disa/managelabresults/map"));
@@ -79,7 +79,7 @@ public class MapUnprocessedLabResultsControllerTest extends BaseContextMockTest 
         when(messageSourceService.getMessage(anyString(), any(Object[].class), any(Locale.class)))
                 .thenReturn("Map Successful!");
 
-        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map")
+        mockMvc.perform(post("/module/disa/managelabresults/" + labResultId + "/map.form")
                 .param("patientUuid", "f6af3bb7-7690-4639-b922-7a631fe5a984"))
                 .andExpect(model().attribute("flashMessage", "Map Successful!"))
                 .andExpect(status().is3xxRedirection())
