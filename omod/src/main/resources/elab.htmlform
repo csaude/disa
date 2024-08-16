@@ -221,8 +221,8 @@
         <div>
           Tipo de Amostra:
           <obs conceptId="47ee9ffd-8103-4788-ab23-e185c144cf1e"
-          answerConceptIds="7c288beb-548c-4440-8f12-4f62cd45305a,1002AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,f17b6cf1-7bed-4d1f-bf70-e09e3a0e4357,1001AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159995AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,"
-          answerLabels="Sangue Seco em Papel de Filtro (DBS),Plasma,Plasma Seco (PSC),Soro,LCR"/>
+          answerConceptIds="7c288beb-548c-4440-8f12-4f62cd45305a,1002AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,f17b6cf1-7bed-4d1f-bf70-e09e3a0e4357,1001AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159995AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,1000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,159994AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+          answerLabels="Sangue Seco em Papel de Filtro (DBS),Plasma,Plasma Seco (PSC),Soro,LCR,Sangue Total,Urina"/>
         </div>
         <div>
           Nome do técnico:
@@ -262,19 +262,17 @@
         <b>3. Monitoria de tratamento de HIV</b>
       </div>
       <div class="form-row">
-        <div style="flex: 0.5;">
+        <div>
           CD4 Absoluto:
           <obs conceptId="e1dd5ab4-1d5f-11e0-b929-000c29ad1d07" />
         </div>
-        <div style="flex: 0.5;">
-          CD4%:
-          <obs conceptId="e1d48fba-1d5f-11e0-b929-000c29ad1d07" />
+        <div>
+          CD4 Semi-quantitativo:
+          <obs conceptId="db7f1675-8850-476d-bc09-70be975c0867"/>
         </div>
         <div>
-          Razão de Solicitação da Carga Viral:
-          <obs conceptId="a97ab290-5b66-4755-bd49-d82f944cd093"
-            answerConceptIds="971cf484-2751-40ce-9f89-d23f544d06e2, e1d616b4-1d5f-11e0-b929-000c29ad1d07, df6aa98d-0124-4fb7-b4fb-5dc99f6ddcc9, 14ef99f0-88b2-4210-9e85-bfa002743728, 6f60eaa1-886d-4891-9d3d-7ade75d67606, 1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-            answerLabels="Rotina, Suspeita de Falência Viral, Suspeita de falência imunológica, Suspeita Clínica, Repetir Após o Aleitamento, Não Preenchido" />
+          CD4%:
+          <obs conceptId="e1d48fba-1d5f-11e0-b929-000c29ad1d07" />
         </div>
       </div>
       <div class="form-row">
@@ -286,6 +284,12 @@
             answerConceptIds="e1da2812-1d5f-11e0-b929-000c29ad1d07,cc8ef88c-6ab6-4404-a036-d415bc42cc1c,4df535db-b8c9-4759-85bb-f4bcb5bebdc6"
             answerLabels="Nivel de detecção baixo,Indetectável,&#60;" commentFieldLabel="&#160;| Valor:" />
         </div>
+        <div>
+          Razão de Solicitação da Carga Viral:
+          <obs conceptId="a97ab290-5b66-4755-bd49-d82f944cd093"
+            answerConceptIds="971cf484-2751-40ce-9f89-d23f544d06e2, e1d616b4-1d5f-11e0-b929-000c29ad1d07, df6aa98d-0124-4fb7-b4fb-5dc99f6ddcc9, 14ef99f0-88b2-4210-9e85-bfa002743728, 6f60eaa1-886d-4891-9d3d-7ade75d67606, 1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            answerLabels="Rotina, Suspeita de Falência Viral, Suspeita de falência imunológica, Suspeita Clínica, Repetir Após o Aleitamento, Não Preenchido" />
+        </div>
       </div>
       <div class="header">
         <b>4. Diagnóstico Laboratorial para TB</b>
@@ -295,12 +299,12 @@
           <obs id="tbLam" conceptId="ef139cb2-97c1-4c0f-9189-5e0711a45b8f"
             answerConceptIds="e1d47386-1d5f-11e0-b929-000c29ad1d07, e1d446cc-1d5f-11e0-b929-000c29ad1d07"
             labelText="TB LAM:" answerLabels="Positivo,Negativo" style="radio" />
-          <obs id="nivelPositividadeTbLam" conceptId="303a4480-f2b3-4192-a446-725a401ebb09"
-            labelText="Nível de positividade (TB LAM):" answerConceptIds="16c13c13-2f85-4492-ae9b-4358b34070e7,
-                                         a4e43a4d-37ea-4767-a700-9fe1d43a8042,
-                                         79f4bd59-0dbb-41ba-9d78-3efc0b737b75,
-                                         03d4b7c8-c8cd-4f84-be40-67975bd5b667" answerLabels="4+,3+,2+,1+"
-            style="radio" />
+          <obsgroup groupingConceptId="5d11cf23-9c8b-4ee7-a2d4-b81993123d0d">
+            <obs id="nivelPositividadeTbLam" conceptId="303a4480-f2b3-4192-a446-725a401ebb09"
+              labelText="Nível de positividade (TB LAM):"
+              answerConceptIds="16c13c13-2f85-4492-ae9b-4358b34070e7,a4e43a4d-37ea-4767-a700-9fe1d43a8042,79f4bd59-0dbb-41ba-9d78-3efc0b737b75,03d4b7c8-c8cd-4f84-be40-67975bd5b667"
+              answerLabels="4+,3+,2+,1+" style="radio" />
+          </obsgroup>
         </div>
       </div>
       <div class="header">

@@ -108,8 +108,8 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
                 any(LocalDateTime.class),
                 any(LocalDateTime.class),
                 anyString(),
-                anyString(),
-                anyString(),
+                any(LabResultStatus.class),
+                any(NotProcessingCause.class),
                 any(TypeOfResult.class),
                 anyString(),
                 anyListOf(String.class),
@@ -127,9 +127,9 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
                     LocalDate.now(),
                     LocalDate.now(),
                     "",
-                    "",
-                    "",
-                    TypeOfResult.ALL,
+                    null,
+                    null,
+                    null,
                     "",
                     Collections.singletonList(sismaCode),
                     "",
@@ -138,6 +138,5 @@ public class LabResultServiceImplTest extends BaseContextMockTest {
                     "",
                     "");
         });
-
     }
 }
