@@ -27,7 +27,7 @@
 	</organization>
 
 	<scm>
-		<developerConnection>scm:git:git@github.com:csaude/disa.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:Machabane/disa-mvn.git</developerConnection>
 	</scm>
 
 	<modules>
