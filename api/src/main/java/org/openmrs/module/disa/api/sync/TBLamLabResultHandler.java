@@ -1,6 +1,8 @@
 package org.openmrs.module.disa.api.sync;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
@@ -12,6 +14,7 @@ import org.openmrs.Provider;
 import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.LabResultStatus;
 import org.openmrs.module.disa.api.NotProcessingCause;
+import org.openmrs.module.disa.api.SampleType;
 import org.openmrs.module.disa.api.TBLamLabResult;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.util.Constants;
@@ -77,6 +80,8 @@ public class TBLamLabResultHandler extends BaseLabResultHandler {
         // TB LAM
         Concept tbLamConcept = conceptService.getConceptByUuid(Constants.TB_LAM);
         Obs obs23951 = new Obs(person, tbLamConcept, obsDatetime, location);
+        Concept tbLamLabSet = conceptService.getConceptByUuid(Constants.TB_LAM_POSITIVITY_LEVEL_LABSET);
+        Obs obsGroup = new Obs(person, tbLamLabSet, obsDatetime, location);
         if (negativeResult) {
             obs23951.setValueCoded(conceptService.getConceptByUuid(Constants.NEGATIVE));
         } else {
@@ -86,13 +91,21 @@ public class TBLamLabResultHandler extends BaseLabResultHandler {
                 Concept positivityLevel = conceptService.getConceptByUuid(Constants.POSITIVITY_LEVEL);
                 Obs obs165185 = new Obs(person, positivityLevel, obsDatetime, location);
                 obs165185.setValueCoded(answer);
-                Concept tbLamLabSet = conceptService.getConceptByUuid(Constants.TB_LAM_POSITIVITY_LEVEL_LABSET);
-                Obs obsGroup = new Obs(person, tbLamLabSet, obsDatetime, location);
                 obsGroup.addGroupMember(obs165185);
-                encounter.addObs(obsGroup);
             }
         }
-        encounter.addObs(obs23951);
+        obsGroup.addGroupMember(obs23951);
+        encounter.addObs(obsGroup);
+
+        // Specimen type
+        SampleType sampleType = tbLam.getSampleType();
+        List<SampleType> validSampleTypes = Arrays.asList(SampleType.U);
+        if (sampleType != null && validSampleTypes.contains(sampleType)) {
+            Concept concept = conceptService.getConceptByUuid(Constants.SAMPLE_TYPE);
+            Obs obs23832 = new Obs(person, concept, obsDatetime, location);
+            obs23832.setValueCoded(conceptService.getConceptByUuid(sampleType.getConceptUuid()));
+            encounter.addObs(obs23832);
+        }
     }
 
     private Concept getPositivityLevelAnswer(String fromString) {

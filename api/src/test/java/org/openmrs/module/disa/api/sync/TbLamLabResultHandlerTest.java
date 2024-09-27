@@ -46,6 +46,7 @@ public class TbLamLabResultHandlerTest extends BaseContextMockTest {
 
     private TBLamLabResult labResult;
 
+    private Concept tbLam;
     private Concept tbLamPositivityLabSet;
     private Concept positivityLevel;
     private Concept level3;
@@ -74,6 +75,9 @@ public class TbLamLabResultHandlerTest extends BaseContextMockTest {
         Location location = new Location();
         location.setUuid("c5242910-b396-41d1-9729-a3fbc03057b1");
         tbLamLabResultHandler.getSyncContext().put(LocationLookup.LOCATION_KEY, location);
+
+        tbLam = new Concept();
+        tbLam.setUuid(Constants.TB_LAM);
 
         positivityLevel = new Concept();
         positivityLevel.setUuid(Constants.POSITIVITY_LEVEL);
@@ -153,10 +157,11 @@ public class TbLamLabResultHandlerTest extends BaseContextMockTest {
     }
 
     @Test
-    public void shouldSavePositivityLevelInObsGroup() {
+    public void shouldSaveResultAndPositivityLevelInObsGroup() {
 
         when(conceptService.getConceptByUuid(Constants.TB_LAM_POSITIVITY_LEVEL_LABSET))
                 .thenReturn(tbLamPositivityLabSet);
+        when(conceptService.getConceptByUuid(Constants.TB_LAM)).thenReturn(tbLam);
         when(conceptService.getConceptByUuid(Constants.POSITIVITY_LEVEL)).thenReturn(positivityLevel);
         when(conceptService.getConceptByUuid(Constants.LEVEL_3)).thenReturn(level3);
 
@@ -166,6 +171,14 @@ public class TbLamLabResultHandlerTest extends BaseContextMockTest {
 
         Encounter encounter = (Encounter) tbLamLabResultHandler.getSyncContext()
                 .get(BaseLabResultHandler.ENCOUNTER_KEY);
+
+        Obs tbLamObs = encounter.getObs().stream()
+                .filter(o -> o.getConcept() != null)
+                .filter(o -> o.getConcept().equals(tbLam))
+                .findFirst()
+                .get();
+
+        assertThat(tbLamObs.getObsGroup().getConcept(), is(tbLamPositivityLabSet));
 
         Obs positivityLevelObs = encounter.getObs().stream()
                 .filter(o -> o.getConcept() != null)

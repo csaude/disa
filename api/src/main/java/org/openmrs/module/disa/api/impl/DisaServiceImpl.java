@@ -43,12 +43,10 @@ import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 /**
  * It is a default implementation of {@link DisaService}.
  */
-@Service
 public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 
 	protected final Log log = LogFactory.getLog(this.getClass());
@@ -109,8 +107,7 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 
 			String labResultStatus = messageSourceService
 					.getMessage("disa.viral.load.status." + disa.getLabResultStatus());
-			throw new DisaModuleAPIException("disa.viralload.map.wrong.status",
-					new String[] { labResultStatus });
+			throw new DisaModuleAPIException("disa.viralload.map.wrong.status", new String[] { labResultStatus });
 		}
 
 		Patient patient = patientService.getPatientByUuid(patientUuid);
@@ -118,8 +115,7 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 			throw new DisaModuleAPIException("disa.map.no.identifiers", new Object[] {});
 		}
 
-		PatientIdentifierType disaNIDIdentifier = patientService
-				.getPatientIdentifierTypeByUuid(Constants.DISA_NID);
+		PatientIdentifierType disaNIDIdentifier = patientService.getPatientIdentifierTypeByUuid(Constants.DISA_NID);
 		List<PatientIdentifier> identifiers = patientService.getPatientIdentifiers(disa.getNid(),
 				Arrays.asList(disaNIDIdentifier), null, null, null);
 
@@ -159,8 +155,6 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 		fsrLog.setTypOfResult(labResult.getTypeOfResult());
 		saveSyncLog(fsrLog);
 
-		String defaultLocationUuid = locationService.getDefaultLocation().getUuid();
-		labResult.setSynchronizedBy(defaultLocationUuid);
 		labResultService.updateLabResult(labResult);
 	}
 
