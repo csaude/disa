@@ -1,12 +1,12 @@
 package org.openmrs.module.disa.api.sync;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDateTime;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Location;
@@ -19,7 +19,7 @@ import org.openmrs.api.PersonService;
 import org.openmrs.module.disa.api.CD4LabResult;
 import org.openmrs.module.disa.api.LabResultStatus;
 import org.openmrs.module.disa.api.NotProcessingCause;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class CD4LabResultHandlerTest extends BaseContextMockTest {
 
@@ -40,7 +40,7 @@ public class CD4LabResultHandlerTest extends BaseContextMockTest {
 
     private CD4LabResult labResult;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         labResult = new CD4LabResult();
         labResult.setLabResultStatus(LabResultStatus.PENDING);

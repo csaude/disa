@@ -29,7 +29,7 @@ async function updateSyncStatus() {
     }
     setTimeout(updateSyncStatus, repeatInterval);
   } catch (error) {
-    console.log("Could not fetch sync status: ", error);
+    console.error("Could not fetch sync status: ", error);
   }
 }
 

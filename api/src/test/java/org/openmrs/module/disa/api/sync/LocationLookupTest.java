@@ -1,7 +1,8 @@
 package org.openmrs.module.disa.api.sync;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -11,8 +12,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.GlobalProperty;
@@ -24,7 +25,7 @@ import org.openmrs.module.disa.api.HIVVLLabResult;
 import org.openmrs.module.disa.api.LabResult;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.util.Constants;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class LocationLookupTest extends BaseContextMockTest {
 
@@ -42,7 +43,7 @@ public class LocationLookupTest extends BaseContextMockTest {
 
     private Location location;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         String uuid = "132895aa-1c88-11e8-b6fd-7395830b63f3";
         GlobalProperty locationAttrTypeGp = new GlobalProperty(Constants.LOCATION_ATTRIBUTE_TYPE_UUID, uuid);
@@ -67,7 +68,6 @@ public class LocationLookupTest extends BaseContextMockTest {
         locationLookup.setNext(next);
     }
 
-
     @Test
     public void shouhouldAddTheLocationToSyncContext() {
         LabResult labResult = new HIVVLLabResult();
@@ -81,7 +81,6 @@ public class LocationLookupTest extends BaseContextMockTest {
         verify(next, times(1)).handle(labResult);
     }
 
-    @Test(expected = DisaModuleAPIException.class)
     public void shouhouldThrowExceptionIfLocationNotFound() {
         LabResult labResult = new HIVVLLabResult();
         labResult.setHealthFacilityLabCode("1234");
@@ -95,7 +94,9 @@ public class LocationLookupTest extends BaseContextMockTest {
                 isNull(Integer.class)))
                 .thenReturn(Collections.emptyList());
 
-        locationLookup.handle(labResult);
+        assertThrows(DisaModuleAPIException.class, () -> {
+            locationLookup.handle(labResult);
+        });
 
     }
 }

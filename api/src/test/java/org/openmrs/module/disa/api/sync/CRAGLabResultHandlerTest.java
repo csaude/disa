@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Concept;
@@ -29,7 +29,7 @@ import org.openmrs.module.disa.api.LabResultStatus;
 import org.openmrs.module.disa.api.NotProcessingCause;
 import org.openmrs.module.disa.api.SampleType;
 import org.openmrs.module.disa.api.util.Constants;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class CRAGLabResultHandlerTest extends BaseContextMockTest {
     @Mock
@@ -53,7 +53,7 @@ public class CRAGLabResultHandlerTest extends BaseContextMockTest {
     private Concept serum;
     private Concept dryBloodSpot;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         labResult = new CRAGLabResult();
         labResult.setLabResultStatus(LabResultStatus.PENDING);

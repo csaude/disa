@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openmrs.module.disa.api.config.DisaUserAgentHolder;
 import org.openmrs.module.disa.api.config.DisaUserAgentInterceptor;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,7 @@ public class DisaUserAgentInterceptorTest {
 
     private DisaUserAgentInterceptor disaUserAgentInterceptor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         disaUserAgentInterceptor = new DisaUserAgentInterceptor(new DisaUserAgentHolder(userAgent));
     }

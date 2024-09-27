@@ -1,13 +1,13 @@
 package org.openmrs.module.disa.api.sync;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Encounter;
@@ -20,7 +20,7 @@ import org.openmrs.api.FormService;
 import org.openmrs.api.PersonService;
 import org.openmrs.module.disa.api.HIVVLLabResult;
 import org.openmrs.module.disa.api.LabResult;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class BaseLabResultHandlerTest extends BaseContextMockTest {
 

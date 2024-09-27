@@ -1,4 +1,4 @@
-<form:form commandName="searchForm" method="GET">
+<form:form modelAttribute="searchForm" method="GET">
 	<div class="searchFields">
 		<div>
 			<label for="startDate">

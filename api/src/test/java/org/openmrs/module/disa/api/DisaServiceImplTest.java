@@ -1,5 +1,6 @@
 package org.openmrs.module.disa.api;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyListOf;
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
@@ -25,7 +26,7 @@ import org.openmrs.module.disa.api.db.DisaDAO;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.impl.DisaServiceImpl;
 import org.openmrs.module.disa.api.util.Constants;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class DisaServiceImplTest extends BaseContextMockTest {
 
@@ -85,7 +86,6 @@ public class DisaServiceImplTest extends BaseContextMockTest {
         verify(labResultService, times(1)).rescheduleLabResult(result2.getId());
     }
 
-    @Test(expected = DisaModuleAPIException.class)
     public void mapIdentifierShouldThrowExceptionWhenResultIsProcessed() {
         String patientUuid = "patientUuid";
         LabResult disa = new HIVVLLabResult();
@@ -103,13 +103,14 @@ public class DisaServiceImplTest extends BaseContextMockTest {
                 any(), any()))
                 .thenReturn(new ArrayList<>());
 
-        disaServiceImpl.mapIdentifier(patientUuid, disa);
+        assertThrows(DisaModuleAPIException.class, () -> {
+            disaServiceImpl.mapIdentifier(patientUuid, disa);
+        });
 
         verify(patientService, times(0)).savePatientIdentifier(any(PatientIdentifier.class));
         verify(labResultService, times(0)).rescheduleLabResult(disa.getId());
     }
 
-    @Test(expected = DisaModuleAPIException.class)
     public void mapIdentifierShouldThrowExceptionWhenResultIsPending() {
         String patientUuid = "patientUuid";
         LabResult disa = new HIVVLLabResult();
@@ -127,7 +128,9 @@ public class DisaServiceImplTest extends BaseContextMockTest {
                 any(), any()))
                 .thenReturn(new ArrayList<>());
 
-        disaServiceImpl.mapIdentifier(patientUuid, disa);
+        assertThrows(DisaModuleAPIException.class, () -> {
+            disaServiceImpl.mapIdentifier(patientUuid, disa);
+        });
 
         verify(patientService, never()).savePatientIdentifier(any(PatientIdentifier.class));
         verify(labResultService, never()).rescheduleLabResult(disa.getId());

@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -29,8 +29,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -49,7 +49,7 @@ import org.openmrs.module.disa.api.TypeOfResult;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.sync.SyncStatusService;
 import org.openmrs.module.disa.api.util.Constants;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -89,7 +89,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
 
     private OrgUnit cs24deJulho = new OrgUnit(SISMA_CODE, "Zambezia", "Quelimane", "24 de Julho CSURB");
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(manageLabResultsController).build();
     }
@@ -103,7 +103,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
         when(orgUnitService.getOrgUnitByCode(SISMA_CODE))
             .thenReturn(cs24deJulho);
 
-        mockMvc.perform(get("/module/disa/managelabresults/"))
+        mockMvc.perform(get("/module/disa/managelabresults.form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("pageTitle"))
                 .andExpect(view().name("/module/disa/managelabresults/index"));
@@ -118,7 +118,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             when(orgUnitService.getOrgUnitByCode(SISMA_CODE))
             .thenReturn(cs24deJulho);
 
-        mockMvc.perform(get("/module/disa/managelabresults/"))
+        mockMvc.perform(get("/module/disa/managelabresults.form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("orgUnits", hasValue("24 de Julho CSURB - " + SISMA_CODE)))
                 .andExpect(view().name("/module/disa/managelabresults/index"));
@@ -133,7 +133,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             when(orgUnitService.getOrgUnitByCode(SISMA_CODE))
             .thenReturn(null);
 
-        mockMvc.perform(get("/module/disa/managelabresults/"))
+        mockMvc.perform(get("/module/disa/managelabresults.form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("orgUnits", is(anEmptyMap())))
                 .andExpect(view().name("/module/disa/managelabresults/index"));
@@ -148,7 +148,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             when(orgUnitService.getOrgUnitByCode(SISMA_CODE))
             .thenReturn(cs24deJulho);
 
-        mockMvc.perform(get("/module/disa/managelabresults/"))
+        mockMvc.perform(get("/module/disa/managelabresults.form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("exportUri"))
                 .andExpect(view().name("/module/disa/managelabresults/index"));
@@ -181,7 +181,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             any(String.class)))
         .thenReturn(labResults);
 
-        mockMvc.perform(get("/module/disa/managelabresults/"))
+        mockMvc.perform(get("/module/disa/managelabresults.form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("disaPage", instanceOf(Page.class)))
                 .andExpect(view().name("/module/disa/managelabresults/index"));
@@ -196,7 +196,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             when(orgUnitService.getOrgUnitByCode(SISMA_CODE))
             .thenReturn(cs24deJulho);
 
-        HttpSession session = mockMvc.perform(get("/module/disa/managelabresults").param("vlState", "NOT_PROCESSED"))
+        HttpSession session = mockMvc.perform(get("/module/disa/managelabresults.form").param("vlState", "NOT_PROCESSED"))
             .andExpect(status().isOk())
             .andExpect(view().name("/module/disa/managelabresults/index"))
             .andReturn().getRequest().getSession();
@@ -231,7 +231,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
             any(String.class)))
         .thenThrow(new DisaModuleAPIException("Unexpected Error!"));
 
-        mockMvc.perform(get("/module/disa/managelabresults").param("vlState", "NOT_PROCESSED"))
+        mockMvc.perform(get("/module/disa/managelabresults.form").param("vlState", "NOT_PROCESSED"))
             .andExpect(status().isOk())
             .andExpect(model().attribute("flashMessage", "Unexpected Error!"))
             .andExpect(view().name("/module/disa/managelabresults/error"))
@@ -265,7 +265,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
         when(objectMapper.writeValueAsString(any(Page.class)))
             .thenCallRealMethod();
 
-        mockMvc.perform(get("/module/disa/managelabresults/json"))
+        mockMvc.perform(get("/module/disa/managelabresults/json.form"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.resultList[0].id", equalTo(1234)))
@@ -280,7 +280,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
         when(messageSourceService.getMessage(any(String.class), any(), any(Locale.class)))
                 .thenReturn("Missing start date or end date.");
 
-        mockMvc.perform(get("/module/disa/managelabresults/export")
+        mockMvc.perform(get("/module/disa/managelabresults/export.form")
                 .sessionAttr("lastSearchParams", searchParams))
                 .andExpect(model().attribute("flashMessage", equalTo("Missing start date or end date.")));
     }
@@ -294,7 +294,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
         when(messageSourceService.getMessage(any(String.class), any(), any(Locale.class)))
                 .thenReturn("Missing start date or end date.");
 
-        mockMvc.perform(get("/module/disa/managelabresults/export")
+        mockMvc.perform(get("/module/disa/managelabresults/export.form")
                 .sessionAttr("lastSearchParams", searchParams))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/**/managelabresults*vlState=NOT_PROCESSED&vlSisma=1040107*"));
@@ -306,7 +306,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
         searchParams.add("vlState", LabResultStatus.NOT_PROCESSED.toString());
         searchParams.add("vlSisma", "1040107");
 
-        mockMvc.perform(get("/module/disa/managelabresults/export")
+        mockMvc.perform(get("/module/disa/managelabresults/export.form")
                 .sessionAttr("lastSearchParams", searchParams)
                 .param("startDate", "2023/08/01")
                 .param("endDate", "2023/08/07"))
@@ -331,7 +331,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
                 anyListOf(String.class)))
                 .thenReturn(labResults);
 
-        mockMvc.perform(get("/module/disa/managelabresults/download")
+        mockMvc.perform(get("/module/disa/managelabresults/download.form")
                 .param("startDate", "2023/08/01")
                 .param("endDate", "2023/08/07"))
                 .andExpect(status().isOk())

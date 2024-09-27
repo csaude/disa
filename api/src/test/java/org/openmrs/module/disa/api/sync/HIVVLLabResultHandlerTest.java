@@ -1,5 +1,6 @@
 package org.openmrs.module.disa.api.sync;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.equalTo;
@@ -7,7 +8,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
@@ -20,8 +21,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Concept;
@@ -47,7 +48,7 @@ import org.openmrs.module.disa.api.NotProcessingCause;
 import org.openmrs.module.disa.api.SampleType;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.util.Constants;
-import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.test.jupiter.BaseContextMockTest;
 
 public class HIVVLLabResultHandlerTest extends BaseContextMockTest {
 
@@ -93,7 +94,7 @@ public class HIVVLLabResultHandlerTest extends BaseContextMockTest {
 	private Concept serum;
 	private Location location;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		hivvlLabResultHandler.setNext(next);
@@ -199,22 +200,25 @@ public class HIVVLLabResultHandlerTest extends BaseContextMockTest {
 				.thenReturn(serum);
 	}
 
-	@Test(expected = DisaModuleAPIException.class)
 	public void shouldNotRunWithoutPatient() {
 		hivvlLabResultHandler.getSyncContext().remove(PatientNidLookup.PATIENT_KEY);
-		hivvlLabResultHandler.handle(labResult);
+		assertThrows(DisaModuleAPIException.class, () -> {
+			hivvlLabResultHandler.handle(labResult);
+		});
 	}
 
-	@Test(expected = DisaModuleAPIException.class)
 	public void shouldNotRunWithoutLocation() {
 		hivvlLabResultHandler.getSyncContext().remove(LocationLookup.LOCATION_KEY);
-		hivvlLabResultHandler.handle(labResult);
+		assertThrows(DisaModuleAPIException.class, () -> {
+			hivvlLabResultHandler.handle(labResult);
+		});
 	}
 
-	@Test(expected = DisaModuleAPIException.class)
 	public void shouldNotRunWithoutGenericProvider() {
 		hivvlLabResultHandler.getSyncContext().remove(ProviderLookup.PROVIDER_KEY);
-		hivvlLabResultHandler.handle(labResult);
+		assertThrows(DisaModuleAPIException.class, () -> {
+			hivvlLabResultHandler.handle(labResult);
+		});
 	}
 
 	@Test
