@@ -49,7 +49,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-@RequestMapping("/module/disa/managelabresults")
+@RequestMapping("/module/disa/")
 @SessionAttributes({ "flashMessage" })
 public class ManageLabResultsController {
 
@@ -83,7 +83,7 @@ public class ManageLabResultsController {
         this.syncStatusService = syncStatusService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "managelabresults.form", method = RequestMethod.GET)
     public String search(
             @RequestParam MultiValueMap<String, String> params,
             @Valid SearchForm searchForm,

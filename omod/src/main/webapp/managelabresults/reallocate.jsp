@@ -18,7 +18,7 @@
 	<div class="box">
         <div id="error_msg">
         </div>
-		<form:form commandName="reallocateForm" method="POST" cssClass="reallocate-form">
+		<form:form modelAttribute="reallocateForm" method="POST" cssClass="reallocate-form">
             <div class="field">
                 <div class="label">
                     <label for="healthFacilityLabCode">
