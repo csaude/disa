@@ -21,10 +21,10 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '8'
 
     - name: Build and test with Maven
-      run: mvn clean package -DskipTests=true
+      run: mvn clean verify
 
     - name: Verify coverage
       run: |
