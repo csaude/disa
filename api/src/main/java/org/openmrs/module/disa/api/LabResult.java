@@ -15,7 +15,7 @@ public abstract class LabResult {
 	private String finalResult;
 
 	private String requestId;
-
+	
 	private String location;
 
 	private String createdBy;
