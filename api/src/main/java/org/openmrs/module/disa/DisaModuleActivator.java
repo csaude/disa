@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
@@ -36,6 +37,18 @@ import org.openmrs.scheduler.TaskDefinition;
 public class DisaModuleActivator extends BaseModuleActivator {
 
 	protected Log log = LogFactory.getLog(getClass());
+	private AdministrationService administrationService;
+	
+	private static final String UNKNOWN_LOCATION = "Unknown Location";
+	private static final String LOCATION_ATTRIBUTE_UUID_PROP = Constants.LOCATION_ATTRIBUTE_TYPE_UUID;
+    private static final String DISA_ENVIRONMENT = "DISA_ENVIRONMENT";
+    private static final String DISA_API_USERNAME = "DISA_API_USERNAME";
+    private static final String DISA_API_PASSWORD = "DISA_API_PASSWORD";
+    private static final String DISA_URL_PROP = Constants.DISA_URL;
+    
+    public DisaModuleActivator() {
+        this.administrationService = Context.getAdministrationService();
+	}
 
 	/**
 	 * @see ModuleActivator#willRefreshContext()
@@ -59,11 +72,11 @@ public class DisaModuleActivator extends BaseModuleActivator {
 	public void willStart() {
 		log.info("Starting Disa Module Module");
 		Location defaultLocation = Context.getLocationService().getDefaultLocation();
-		if (defaultLocation == null
-				|| "Unknown Location".equals(defaultLocation.getName())) {
-			throw new ModuleException(
-					"Não foi possivel carregar a default location. Certifique que foi devidamente configurada.");
-		}
+		validateDefaultLocation(defaultLocation);
+		
+		String locationAttrUuid = administrationService.getGlobalPropertyValue(LOCATION_ATTRIBUTE_UUID_PROP, "");
+        LocationAttributeType healthFacilityCode = Context.getLocationService().getLocationAttributeTypeByUuid(locationAttrUuid);
+        validateHealthFacilityCode(healthFacilityCode); 
 	}
 
 	/**
@@ -92,26 +105,39 @@ public class DisaModuleActivator extends BaseModuleActivator {
 
 	private void setUpDisaHttpClient() {
 		DisaAPIHttpClient disaAPIHttpClient = Context.getRegisteredComponents(DisaAPIHttpClient.class).get(0);
-
-		AdministrationService administrationService = Context.getAdministrationService();
-		disaAPIHttpClient.setURLBase(administrationService.getGlobalPropertyValue(Constants.DISA_URL, ""));
+		disaAPIHttpClient.setURLBase(administrationService.getGlobalPropertyValue(DISA_URL_PROP, ""));
 
 		try {
-			ViralLoadFormSchedulerTask.setEnvironment(System.getenv("DISA_ENVIRONMENT"));
+			ViralLoadFormSchedulerTask.setEnvironment(System.getenv(DISA_ENVIRONMENT));
 		} catch (NullPointerException e) {
 			// No problem if environment is not configured. Task won't sync lab results.
 		}
 
 		try {
-			disaAPIHttpClient.setUsername(System.getenv("DISA_API_USERNAME"));
+			disaAPIHttpClient.setUsername(System.getenv(DISA_API_USERNAME));
 		} catch (NullPointerException e) {
 			disaAPIHttpClient.setUsername("");
 		}
 
 		try {
-			disaAPIHttpClient.setPassword(System.getenv("DISA_API_PASSWORD"));
+			disaAPIHttpClient.setPassword(System.getenv(DISA_API_PASSWORD));
 		} catch (NullPointerException e) {
 			disaAPIHttpClient.setPassword("");
+		}
+	}
+	
+	private void validateHealthFacilityCode(LocationAttributeType healthFacilityCode) {
+		if (healthFacilityCode == null) { 
+			throw new ModuleException(
+					"A propriedade disa.api.location.attribute.type.uuid na global property näo esta devidamente configurada. "
+					+ "Ela deve ser idêntica ao uuid da Health Facility Code na location_attribute_type.");
+		}
+	}
+
+	private void validateDefaultLocation(Location defaultLocation) {
+		if (defaultLocation == null
+				|| UNKNOWN_LOCATION.equals(defaultLocation.getName())) {
+			throw new ModuleException("Não foi possivel carregar a default location. Certifique que foi devidamente configurada.");
 		}
 	}
 
