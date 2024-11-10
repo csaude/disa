@@ -120,12 +120,12 @@ public class ManageLabResultsController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "managelabresults/json.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String searchJson(@Valid SearchForm searchForm) throws JsonProcessingException {
         return objectMapper.writeValueAsString(searchLabResults(searchForm));
     }
 
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    @RequestMapping(value = "managelabresults/export.form", method = RequestMethod.GET)
     public String export(@Valid SearchForm searchForm, ModelMap model, HttpSession session) {
 
         @SuppressWarnings("unchecked")
@@ -140,11 +140,10 @@ public class ManageLabResultsController {
                     Context.getLocale()));
             return "redirect:/module/disa/managelabresults.form?" + query;
         }
-
         return "redirect:/module/disa/managelabresults/download.form?" + query;
     }
 
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    @RequestMapping(value = "managelabresults/download.form", method = RequestMethod.GET)
     public ResponseEntity<byte[]> download(
             @Valid SearchForm searchForm,
             ModelMap model) throws IOException {
@@ -165,13 +164,13 @@ public class ManageLabResultsController {
                 .body(report.generateReport());
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "managelabresults/{id}.form", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         labResultService.deleteById(id);
     }
 
-    @RequestMapping(value = "/{id}/reschedule", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "managelabresults/{id}/reschedule.form", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void reschedule(@PathVariable long id) {
         labResultService.rescheduleLabResult(id);
@@ -222,9 +221,9 @@ public class ManageLabResultsController {
                 searchForm.getNotProcessingCauseEnum(),
                 searchForm.getTypeOfResultEnum(),
                 searchForm.getNid(),
-                searchForm.getSismaCode().equals(Constants.ALL)
+                searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
                         ? labResultService.getHealthFacilityLabCodes()
-                        : Arrays.asList(searchForm.getSismaCode()),
+                        : Arrays.asList(searchForm.getSismaCode().split(",")[0]), 
                 searchForm.getSearch(),
                 searchForm.getPageNumber(),
                 searchForm.getPageSize(),
@@ -240,8 +239,8 @@ public class ManageLabResultsController {
                 searchForm.getLabResultStatus(),
                 searchForm.getNotProcessingCauseEnum(),
                 searchForm.getNid(),
-                searchForm.getSismaCode().equals(Constants.ALL)
+                searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
                         ? labResultService.getHealthFacilityLabCodes()
-                        : Arrays.asList(searchForm.getSismaCode()));
+                        : Arrays.asList(searchForm.getSismaCode().split(",")[0]));
     }
 }

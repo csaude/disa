@@ -112,7 +112,7 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
             String requestId,
             LabResultStatus labResultStatus, NotProcessingCause notProcessingCause,
             String nid, List<String> healthFacilityLabCodes) {
-
+    	
         try {
 
             if (healthFacilityLabCodes.isEmpty()) {
@@ -245,7 +245,7 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
     private DisaModuleAPIException handleHttpResponseException(int statusCode,
             List<String> healthFacilityLabCodes,
             String defaultMessage) {
-
+    	
         HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
         if (httpStatus == HttpStatus.FORBIDDEN) {
             String sismaCode = null;
@@ -289,5 +289,4 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
     public void setDisaService(DisaService disaService) {
         this.disaService = disaService;
     }
-
 }
