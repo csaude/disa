@@ -37,7 +37,6 @@ import org.openmrs.scheduler.TaskDefinition;
 public class DisaModuleActivator extends BaseModuleActivator {
 
 	protected Log log = LogFactory.getLog(getClass());
-	private AdministrationService administrationService;
 	
 	private static final String UNKNOWN_LOCATION = "Unknown Location";
 	private static final String LOCATION_ATTRIBUTE_UUID_PROP = Constants.LOCATION_ATTRIBUTE_TYPE_UUID;
@@ -46,10 +45,6 @@ public class DisaModuleActivator extends BaseModuleActivator {
     private static final String DISA_API_PASSWORD = "DISA_API_PASSWORD";
     private static final String DISA_URL_PROP = Constants.DISA_URL;
     
-    public DisaModuleActivator() {
-        this.administrationService = Context.getAdministrationService();
-	}
-
 	/**
 	 * @see ModuleActivator#willRefreshContext()
 	 */
@@ -71,9 +66,11 @@ public class DisaModuleActivator extends BaseModuleActivator {
 	 */
 	public void willStart() {
 		log.info("Starting Disa Module Module");
+		
 		Location defaultLocation = Context.getLocationService().getDefaultLocation();
 		validateDefaultLocation(defaultLocation);
 		
+		AdministrationService administrationService = Context.getAdministrationService();
 		String locationAttrUuid = administrationService.getGlobalPropertyValue(LOCATION_ATTRIBUTE_UUID_PROP, "");
         LocationAttributeType healthFacilityCode = Context.getLocationService().getLocationAttributeTypeByUuid(locationAttrUuid);
         validateHealthFacilityCode(healthFacilityCode); 
@@ -105,6 +102,8 @@ public class DisaModuleActivator extends BaseModuleActivator {
 
 	private void setUpDisaHttpClient() {
 		DisaAPIHttpClient disaAPIHttpClient = Context.getRegisteredComponents(DisaAPIHttpClient.class).get(0);
+
+		AdministrationService administrationService = Context.getAdministrationService();
 		disaAPIHttpClient.setURLBase(administrationService.getGlobalPropertyValue(DISA_URL_PROP, ""));
 
 		try {
