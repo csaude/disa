@@ -155,6 +155,7 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 		fsrLog.setTypOfResult(labResult.getTypeOfResult());
 		saveSyncLog(fsrLog);
 
+		labResult.setEncounterId(encounter.getEncounterId());
 		labResultService.updateLabResult(labResult);
 	}
 
