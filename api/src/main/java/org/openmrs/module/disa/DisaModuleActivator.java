@@ -69,11 +69,7 @@ public class DisaModuleActivator extends BaseModuleActivator {
 		
 		Location defaultLocation = Context.getLocationService().getDefaultLocation();
 		validateDefaultLocation(defaultLocation);
-		
-		AdministrationService administrationService = Context.getAdministrationService();
-		String locationAttrUuid = administrationService.getGlobalPropertyValue(LOCATION_ATTRIBUTE_UUID_PROP, "");
-        LocationAttributeType healthFacilityCode = Context.getLocationService().getLocationAttributeTypeByUuid(locationAttrUuid);
-        validateHealthFacilityCode(healthFacilityCode); 
+		validateHealthFacilityCode();
 	}
 
 	/**
@@ -84,6 +80,7 @@ public class DisaModuleActivator extends BaseModuleActivator {
 
 		setUpDisaHttpClient();
 		setUpViralLoadFormSchedulerTask();
+		//validateHealthFacilityCode();
 	}
 
 	/**
@@ -125,7 +122,11 @@ public class DisaModuleActivator extends BaseModuleActivator {
 		}
 	}
 	
-	private void validateHealthFacilityCode(LocationAttributeType healthFacilityCode) {
+	private void validateHealthFacilityCode() {
+		AdministrationService administrationService = Context.getAdministrationService();
+		String locationAttrUuid = administrationService.getGlobalPropertyValue(LOCATION_ATTRIBUTE_UUID_PROP, "");
+        LocationAttributeType healthFacilityCode = Context.getLocationService().getLocationAttributeTypeByUuid(locationAttrUuid);
+        
 		if (healthFacilityCode == null) { 
 			throw new ModuleException(
 					"A propriedade disa.api.location.attribute.type.uuid na global property näo esta devidamente configurada. "

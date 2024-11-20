@@ -266,27 +266,11 @@
         </sql>
     </changeSet>
     
-    <changeSet id="disa.mandatory-2023-06-19-16:33" author="helio">
-        <sql>
-			INSERT INTO global_property 
-			(property,property_value,description,uuid,datatype,datatype_config,preferred_handler,handler_config,date_changed,changed_by) 
-			VALUES ('disa.mandatory','false','true/false whether or not the disa module MUST start when openmrs starts.  This is used to make sure that mission critical modules are always running if openmrs is running.','e4705f4d-437b-454a-99cf-9bd6aa126ce7',NULL,NULL,NULL,NULL,NULL,NULL);
-        </sql>
-    </changeSet>
-    
     <changeSet id="disa.openmrs.user-2023-06-19-16:42" author="helio">
         <sql>
 			INSERT INTO global_property 
 			(property,property_value,description,uuid,datatype,datatype_config,preferred_handler,handler_config,date_changed,changed_by) 
 			VALUES ('disa.openmrs.user','b0fb57b1-43e7-46dc-ad93-5e2429866b30','disa openmrs user creator','bf2c082e-b50a-11e9-b627-941882ab9f93',NULL,NULL,NULL,NULL,NULL,NULL);
-        </sql>
-    </changeSet>
-    
-    <changeSet id="disa.started-2023-06-19-16:44" author="helio">
-        <sql>
-			INSERT INTO global_property 
-			(property,property_value,description,uuid,datatype,datatype_config,preferred_handler,handler_config,date_changed,changed_by) 
-			VALUES ('disa.started','false','DO NOT MODIFY. true/false whether or not the disa module has been started.  This is used to make sure modules that were running  prior to a restart are started again','d54c25dd-cbeb-4317-b306-4b1a3e68a8ae',NULL,NULL,NULL,NULL,NULL,NULL);
         </sql>
     </changeSet>
     
@@ -313,13 +297,13 @@
 			VALUES ('disa.api.sisma.code','',NULL,'0baa0527-9667-4a9a-be7a-60acae798458',NULL,NULL,NULL,NULL,NULL,NULL);
         </sql>
     </changeSet>
-    <!-- global_property migration ends here -->
 
     <changeSet id="disa-2023-07-17" author="yassin">
 		<delete tableName="global_property">
 			<where>property = 'disa.province.request'</where>
 		</delete>
     </changeSet>
+    <!-- global_property migration ends here -->
 
     <changeSet id="disa-2023-09-19-15:00" author="yassin">
         <comment>
