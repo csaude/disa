@@ -239,6 +239,7 @@ public class ManageLabResultsController {
                 searchForm.getNormalizedRequestId(),
                 searchForm.getLabResultStatus(),
                 searchForm.getNotProcessingCauseEnum(),
+                searchForm.getTypeOfResultEnum(),
                 searchForm.getNid(),
                 searchForm.getSismaCode().equals(Constants.ALL)
                         ? labResultService.getHealthFacilityLabCodes()
