@@ -138,7 +138,7 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 	}
 
 	private List<LabResult> getNotProcessedForPatient(LabResult disa) {
-		return labResultService.getAll(null, null, null, LabResultStatus.NOT_PROCESSED, null, disa.getNid(),
+		return labResultService.getAll(null, null, null, LabResultStatus.NOT_PROCESSED, null,null, disa.getNid(),
 				Collections.singletonList(disa.getHealthFacilityLabCode()));
 	}
 

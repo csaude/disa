@@ -30,6 +30,7 @@ public interface LabResultService extends OpenmrsService {
                         String requestId,
                         LabResultStatus labResultStatus,
                         NotProcessingCause notProcessingCause,
+                        TypeOfResult typeOfResult,
                         String nid,
                         List<String> healthFacilityLabCodes);
 

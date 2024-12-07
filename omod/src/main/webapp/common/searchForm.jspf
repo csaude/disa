@@ -102,6 +102,9 @@
 				<form:option value="CRAG">
 					<openmrs:message code="disa.typeOfResult.CRAG" />
 				</form:option>
+				<form:option value="PCR_EID">
+					<openmrs:message code="disa.typeOfResult.PCR_EID" />
+				</form:option>
 			</form:select>
 		</div>
 		<div class="divider"></div>

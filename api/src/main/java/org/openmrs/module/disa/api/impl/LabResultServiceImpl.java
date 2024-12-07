@@ -110,7 +110,9 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
     public List<LabResult> getAll(
             LocalDate startDate, LocalDate endDate,
             String requestId,
-            LabResultStatus labResultStatus, NotProcessingCause notProcessingCause,
+            LabResultStatus labResultStatus, 
+            NotProcessingCause notProcessingCause,
+            TypeOfResult typeOfResult,
             String nid, List<String> healthFacilityLabCodes) {
 
         try {
@@ -130,7 +132,7 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
 
             return client.getAllLabResults(start, end, requestId,
                     labResultStatus,
-                    notProcessingCause, nid, healthFacilityLabCodes);
+                    notProcessingCause, typeOfResult, nid, healthFacilityLabCodes);
         } catch (HttpStatusCodeException e) {
             throw handleHttpResponseException(e.getStatusCode().value(), healthFacilityLabCodes,
                     "disa.result.export.error");
@@ -233,7 +235,7 @@ public class LabResultServiceImpl extends BaseOpenmrsService implements LabResul
 
     @Override
     public List<LabResult> getResultsToSync() {
-        return getAll(null, null, null, LabResultStatus.PENDING, null, null, getHealthFacilityLabCodes());
+        return getAll(null, null, null, LabResultStatus.PENDING, null, null, null, getHealthFacilityLabCodes());
     }
 
     private boolean probableConnectivityIssue(ResourceAccessException e) {
