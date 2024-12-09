@@ -249,13 +249,19 @@
         </sql>
     </changeSet>
     
-    <changeSet id="disa.api.url-2023-06-19-16:30" author="helio">
+ 	<changeSet id="disa.api.url-2023-06-19-16:30" author="helio">
         <sql>
 			INSERT INTO global_property 
 			(property,property_value,description,uuid,datatype,datatype_config,preferred_handler,handler_config,date_changed,changed_by) 
 			VALUES ('disa.api.url','https://disa-api.fgh.org.mz/services/viralloads/requestProvince','APHL data source to collect viral load data','e07cdb3f-871a-11e9-898c-0242ac120002',NULL,NULL,NULL,NULL,NULL,NULL);
         </sql>
     </changeSet>
+    
+    <changeSet author="disa.api.url-2024-12-09-12:10" id="helio">
+    	<sql>
+    		UPDATE global_property SET property_value='https://openhim.csaude.org.mz:5001' WHERE property='disa.api.url';
+    	</sql>
+    </changeSet> 
     
     <changeSet id="disa.database_version-2023-06-19-16:32" author="helio">
         <sql>
