@@ -131,13 +131,13 @@ public class PcrEidLabResultHandler extends BaseLabResultHandler {
 	}
 
 	private void processResult(String finalResult, Obs obs1030, Encounter encounter) {
-		if (finalResult.contains("Negativ")) {
+		if (finalResult.contains(Constants.NEGATIV)) {
 			obs1030.setValueCoded(conceptService.getConceptByUuid(Constants.HIV_PCR_NEGATIVE));
 			encounter.addObs(obs1030); 
-        } else if (finalResult.contains("Positiv")) {
+        } else if (finalResult.contains(Constants.POSITIV)) {
 			obs1030.setValueCoded(conceptService.getConceptByUuid(Constants.HIV_PCR_POSITIVE));
 			encounter.addObs(obs1030); 
-        } else if (finalResult.contains("Indeterm")) {
+        } else if (finalResult.contains(Constants.INDETERMINATE)) {
 			obs1030.setValueCoded(conceptService.getConceptByUuid(Constants.HIV_PCR_INDETERMINATE));
 			encounter.addObs(obs1030); 
         }
@@ -146,14 +146,14 @@ public class PcrEidLabResultHandler extends BaseLabResultHandler {
 	private void processAttribute1(String typeOfCollection, Obs obs165502, Encounter encounter) {  
 		// map associating attribute values with type of collection uuid 
 		Map<String, Concept> attributeToUuidMap = new HashMap<>();
-		attributeToUuidMap.put("PC9M", conceptService.getConceptByUuid(Constants.PC9M)); 
-		attributeToUuidMap.put("CPC9M", conceptService.getConceptByUuid(Constants.CPC9M));
-		attributeToUuidMap.put("RCR9M", conceptService.getConceptByUuid(Constants.RCR9M));
-		attributeToUuidMap.put("CS9M", conceptService.getConceptByUuid(Constants.CS9M));
-		attributeToUuidMap.put("PC9_17M", conceptService.getConceptByUuid(Constants.PC9_17M));
-		attributeToUuidMap.put("CPC9_17M", conceptService.getConceptByUuid(Constants.CPC9_17M));
-		attributeToUuidMap.put("RCR9_17M", conceptService.getConceptByUuid(Constants.RCR9_17M));
-		attributeToUuidMap.put("CS9_17M", conceptService.getConceptByUuid(Constants.CS9_17M));
+		attributeToUuidMap.put(Constants._PC9M, conceptService.getConceptByUuid(Constants.PC9M)); 
+		attributeToUuidMap.put(Constants._CPC9M, conceptService.getConceptByUuid(Constants.CPC9M));
+		attributeToUuidMap.put(Constants._RCR9M, conceptService.getConceptByUuid(Constants.RCR9M));
+		attributeToUuidMap.put(Constants._CS9M, conceptService.getConceptByUuid(Constants.CS9M));
+		attributeToUuidMap.put(Constants._PC9_17M, conceptService.getConceptByUuid(Constants.PC9_17M));
+		attributeToUuidMap.put(Constants._CPC9_17M, conceptService.getConceptByUuid(Constants.CPC9_17M));
+		attributeToUuidMap.put(Constants._RCR9_17M, conceptService.getConceptByUuid(Constants.RCR9_17M));
+		attributeToUuidMap.put(Constants._CS9_17M, conceptService.getConceptByUuid(Constants.CS9_17M));
 		Concept concept = attributeToUuidMap.get(typeOfCollection);
 		if (concept !=null) {
 			obs165502.setValueCoded(concept);

@@ -38,6 +38,10 @@ public class Constants {
 	public static final String HIV_PCR_POSITIVE = "e1d47386-1d5f-11e0-b929-000c29ad1d07";
 	public static final String HIV_PCR_INDETERMINATE = "e1d89f2e-1d5f-11e0-b929-000c29ad1d07";
 	
+	public static final String NEGATIV = "Negativ";
+	public static final String POSITIV = "Positiv";
+	public static final String INDETERMINATE = "Indeterm";
+	
 	public static final String PC9M = "b0c97813-1b29-4e93-adcd-985275ddeb43";
 	public static final String CPC9M = "1caecedd-c156-456e-b9ac-87631e70b506";
 	public static final String RCR9M = "d2c90c58-37ca-4243-a9ff-d1b1607028c6";
@@ -46,6 +50,16 @@ public class Constants {
 	public static final String CPC9_17M = "38bc930a-ccd4-4300-b59a-a4aa3ef6f98b";
 	public static final String RCR9_17M = "09811d95-96c4-42d4-a77d-680217356240";
 	public static final String CS9_17M = "66498d73-2744-4aa0-bce0-703684002cac";
+	
+	public static final String _PC9M = "PC9M";
+	public static final String _CPC9M = "CPC9M";
+	public static final String _RCR9M = "RCR9M";
+	public static final String _CS9M = "CS9M";
+	public static final String _PC9_17M = "PC9_17M";
+	public static final String _CPC9_17M = "CPC9_17M";
+	public static final String _RCR9_17M = "RCR9_17M";
+	public static final String _CS9_17M = "CS9_17M";
+
 	
 	public static final String PCR_EID_NEGATIVE = "Negativ";
 	public static final String PCR_EID_POSITIVE = "Positiv";
