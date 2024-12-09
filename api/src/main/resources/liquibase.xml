@@ -257,6 +257,12 @@
         </sql>
     </changeSet>
     
+    <changeSet author="disa.api.url-2024-12-09-12:10" id="helio">
+    	<sql>
+    		UPDATE global_property SET property_value='https://openhim.csaude.org.mz:5001' WHERE property='disa.api.url';
+    	</sql>
+    </changeSet> 
+    
     <changeSet id="disa.database_version-2023-06-19-16:32" author="helio">
         <sql>
             INSERT INTO global_property 
