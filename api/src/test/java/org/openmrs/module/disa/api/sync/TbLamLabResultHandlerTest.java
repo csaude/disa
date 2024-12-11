@@ -155,37 +155,4 @@ public class TbLamLabResultHandlerTest extends BaseContextMockTest {
         assertThat(encounter, is(notNullValue()));
         assertThat(positivityLevelObs.getValueCoded(), is(level3));
     }
-
-    @Test
-    public void shouldSaveResultAndPositivityLevelInObsGroup() {
-
-        when(conceptService.getConceptByUuid(Constants.TB_LAM_POSITIVITY_LEVEL_LABSET))
-                .thenReturn(tbLamPositivityLabSet);
-        when(conceptService.getConceptByUuid(Constants.TB_LAM)).thenReturn(tbLam);
-        when(conceptService.getConceptByUuid(Constants.POSITIVITY_LEVEL)).thenReturn(positivityLevel);
-        when(conceptService.getConceptByUuid(Constants.LEVEL_3)).thenReturn(level3);
-
-        labResult.setFinalResult("Positiv");
-        labResult.setPositivityLevel("GRIII");
-        tbLamLabResultHandler.handle(labResult);
-
-        Encounter encounter = (Encounter) tbLamLabResultHandler.getSyncContext()
-                .get(BaseLabResultHandler.ENCOUNTER_KEY);
-
-        Obs tbLamObs = encounter.getObs().stream()
-                .filter(o -> o.getConcept() != null)
-                .filter(o -> o.getConcept().equals(tbLam))
-                .findFirst()
-                .get();
-
-        assertThat(tbLamObs.getObsGroup().getConcept(), is(tbLamPositivityLabSet));
-
-        Obs positivityLevelObs = encounter.getObs().stream()
-                .filter(o -> o.getConcept() != null)
-                .filter(o -> o.getConcept().equals(positivityLevel))
-                .findFirst()
-                .get();
-
-        assertThat(positivityLevelObs.getObsGroup().getConcept(), is(tbLamPositivityLabSet));
-    }
 }

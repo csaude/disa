@@ -68,6 +68,7 @@ public class TBLamLabResultHandler extends BaseLabResultHandler {
             }
 
         }
+        
         return super.handle(labResult);
     }
 
@@ -80,22 +81,22 @@ public class TBLamLabResultHandler extends BaseLabResultHandler {
         // TB LAM
         Concept tbLamConcept = conceptService.getConceptByUuid(Constants.TB_LAM);
         Obs obs23951 = new Obs(person, tbLamConcept, obsDatetime, location);
-        Concept tbLamLabSet = conceptService.getConceptByUuid(Constants.TB_LAM_POSITIVITY_LEVEL_LABSET);
-        Obs obsGroup = new Obs(person, tbLamLabSet, obsDatetime, location);
         if (negativeResult) {
             obs23951.setValueCoded(conceptService.getConceptByUuid(Constants.NEGATIVE));
+            encounter.addObs(obs23951); 
         } else {
             obs23951.setValueCoded(conceptService.getConceptByUuid(Constants.POSITIVE));
-            Concept answer = getPositivityLevelAnswer(tbLam.getPositivityLevel());
-            if (answer != null) {
-                Concept positivityLevel = conceptService.getConceptByUuid(Constants.POSITIVITY_LEVEL);
-                Obs obs165185 = new Obs(person, positivityLevel, obsDatetime, location);
-                obs165185.setValueCoded(answer);
-                obsGroup.addGroupMember(obs165185);
-            }
+            encounter.addObs(obs23951);
         }
-        obsGroup.addGroupMember(obs23951);
-        encounter.addObs(obsGroup);
+        
+        // POSITIVITY LEVEL
+        Concept answer = getPositivityLevelAnswer(tbLam.getPositivityLevel());
+        if (answer != null) {
+            Concept positivityLevel = conceptService.getConceptByUuid(Constants.POSITIVITY_LEVEL);
+            Obs obs165185 = new Obs(person, positivityLevel, obsDatetime, location);
+            obs165185.setValueCoded(answer);
+            encounter.addObs(obs165185); 
+        }
 
         // Specimen type
         SampleType sampleType = tbLam.getSampleType();
