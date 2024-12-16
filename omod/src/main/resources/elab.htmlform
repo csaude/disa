@@ -320,7 +320,7 @@
           <obs conceptId="165502" labelText="Tipo de Colheita - DPI:" answerConceptIds="165503,165504,165505,165506,165507,165508,165509,165510" answerLabels="Primeira colheita &lt;9m,Confirmação da primeira colheita &lt;9m,Repetição de colheita por rejeição &lt;9m,
             Colheita seguinte &lt;9m,Primeira colheita 9-17 meses,Confirmação da primeira colheita 9-17 meses,
             Repetição de colheita por rejeição 9-17 meses,Colheita seguinte 9-17 meses"/></div><div>
-            <obs conceptId="1030" labelText="HIV DNA PCR" answerConceptIds="703,664,1457" answerLabels="Pos.,Neg.,Sem Resultado"
+            <obs conceptId="1030" labelText="HIV DNA PCR" answerConceptIds="703,664,1138" answerLabels="Pos.,Neg.,Sem Resultado"
               style="radio" />
         </div>
       </div>
