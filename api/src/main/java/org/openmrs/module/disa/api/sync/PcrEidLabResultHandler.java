@@ -99,7 +99,7 @@ public class PcrEidLabResultHandler extends BaseLabResultHandler {
         
         // Specimen type
         SampleType sampleType = pcrEid.getSampleType();
-        List<SampleType> validSampleTypes = Arrays.asList(SampleType.DBS, SampleType.PL, SampleType.PSC);
+        List<SampleType> validSampleTypes = Arrays.asList(SampleType.SA, SampleType.DBS, SampleType.PL);
         if (sampleType != null && validSampleTypes.contains(sampleType)) {
             Concept concept = conceptService.getConceptByUuid(Constants.SAMPLE_TYPE);
             Obs obs23832 = new Obs(person, concept, obsDatetime, location);
@@ -108,7 +108,7 @@ public class PcrEidLabResultHandler extends BaseLabResultHandler {
         }
         
         // type of collection
-        if (pcrEid.getPositivityLevel()!=null || !pcrEid.getPositivityLevel().isEmpty()) {
+        if (pcrEid.getPositivityLevel()!=null && !pcrEid.getPositivityLevel().isEmpty()) {
             Obs obs165502 = new Obs();
             obs165502.setPerson(person);
             obs165502.setObsDatetime(obsDatetime);
@@ -119,7 +119,7 @@ public class PcrEidLabResultHandler extends BaseLabResultHandler {
 		}
         
         // final result
-        if (pcrEid.getFinalResult()!=null || !pcrEid.getFinalResult().isEmpty()) {
+        if (pcrEid.getFinalResult()!=null && !pcrEid.getFinalResult().isEmpty()) {
             Obs obs1030 = new Obs();
             obs1030.setPerson(person);
             obs1030.setObsDatetime(obsDatetime);
