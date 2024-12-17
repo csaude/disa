@@ -315,7 +315,7 @@
       <div class="header">
         <b>5. Diagnóstico Precoce Infantil</b>
       </div>
-      <div class="form-row pcr">
+      <div class="form-row">
         <div>
           <obs conceptId="a5e0eb66-c75d-4f2a-956c-3bf4e66b1a84" labelText="Tipo de Colheita - DPI:" answerConceptIds="b0c97813-1b29-4e93-adcd-985275ddeb43,1caecedd-c156-456e-b9ac-87631e70b506,d2c90c58-37ca-4243-a9ff-d1b1607028c6,6ab70bdb-5775-4738-94f3-9f726cfcfa31,0f6b8555-71e6-4c61-bcc3-6815d33940e1,38bc930a-ccd4-4300-b59a-a4aa3ef6f98b,09811d95-96c4-42d4-a77d-680217356240,66498d73-2744-4aa0-bce0-703684002cac" answerLabels="Primeira colheita &lt;9m,Confirmação da primeira colheita &lt;9m,Repetição de colheita por rejeição &lt;9m,
             Colheita seguinte &lt;9m,Primeira colheita 9-17 meses,Confirmação da primeira colheita 9-17 meses,
