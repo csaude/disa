@@ -63,7 +63,7 @@ public class SearchForm {
     }
 
     public void setRequestId(String requestId) {
-        this.requestId = clearWhiteSpace(requestId);
+        this.requestId = clearWhiteSpace(requestId).replace(",", "");
 
     }
 
@@ -72,7 +72,7 @@ public class SearchForm {
     }
 
     public void setNid(String nid) {
-        this.nid = clearWhiteSpace(nid);
+        this.nid = clearWhiteSpace(nid).replace(",", "");
     }
 
     public String getSismaCode() {
@@ -126,10 +126,11 @@ public class SearchForm {
     public String getNotProcessingCause() {
         return notProcessingCause;
     }
-
+    
     public NotProcessingCause getNotProcessingCauseEnum() {
-        return notProcessingCause == null || Constants.ALL.equals(notProcessingCause) ? null
-                : NotProcessingCause.valueOf(notProcessingCause);
+    	String cleanedNotProcessingCause = clearWhiteSpace(notProcessingCause).split(",")[0];
+        return cleanedNotProcessingCause == null || Constants.ALL.equals(cleanedNotProcessingCause) ? null
+                : NotProcessingCause.valueOf(cleanedNotProcessingCause);
     }
 
     public void setNotProcessingCause(String notProcessingCause) {
@@ -187,9 +188,10 @@ public class SearchForm {
     public TypeOfResult getTypeOfResultEnum() {
         return typeOfResult == null || Constants.ALL.equals(typeOfResult) ? null : TypeOfResult.valueOf(typeOfResult);
     }
-
+    
     public LabResultStatus getLabResultStatus() {
-        return vlState == null || Constants.ALL.equals(vlState) ? null : LabResultStatus.valueOf(vlState);
+    	String cleanedVlState = clearWhiteSpace(vlState).split(",")[0];
+        return cleanedVlState == null || Constants.ALL.equals(cleanedVlState) ? null : LabResultStatus.valueOf(cleanedVlState);
     }
 
     private String clearWhiteSpace(String str) {

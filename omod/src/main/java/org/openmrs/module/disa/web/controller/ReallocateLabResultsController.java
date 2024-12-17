@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@RequestMapping("/module/disa/managelabresults/{id}/reallocate")
+@RequestMapping("/module/disa/")
 @SessionAttributes({ "flashMessage" })
 public class ReallocateLabResultsController {
 
@@ -46,7 +46,7 @@ public class ReallocateLabResultsController {
         this.messageSourceService = messageSourceService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "managelabresults/{id}/reallocate.form", method = RequestMethod.GET)
     public String reallocateForm(
             @PathVariable long id,
             ModelMap model,
@@ -63,7 +63,7 @@ public class ReallocateLabResultsController {
         return "/module/disa/managelabresults/reallocate";
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "managelabresults/{id}/reallocate.form", method = RequestMethod.POST)
     public String reallocate(@PathVariable long id,
             @Valid @ModelAttribute ReallocateForm reallocateForm,
             BindingResult result,

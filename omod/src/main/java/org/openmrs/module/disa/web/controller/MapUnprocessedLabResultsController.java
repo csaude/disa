@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
-@RequestMapping("/module/disa/managelabresults/{id}/map")
+@RequestMapping("/module/disa/")
 @SessionAttributes({ "flashMessage" })
 public class MapUnprocessedLabResultsController {
 
@@ -45,7 +45,7 @@ public class MapUnprocessedLabResultsController {
 		this.disaService = disaService;
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "managelabresults/{id}/map.form", method = RequestMethod.GET)
 	public String patientIdentifierMapping(
 			@PathVariable long id,
 			ModelMap model,
@@ -76,7 +76,7 @@ public class MapUnprocessedLabResultsController {
 		return "/module/disa/managelabresults/map";
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	@RequestMapping(value = "managelabresults/{id}/map.form", method = RequestMethod.POST)
 	public String mapPatientIdentifier(
 			@PathVariable long id,
 			@RequestParam(required = false) String patientUuid,
