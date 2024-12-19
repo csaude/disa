@@ -108,6 +108,7 @@ public class Constants {
 	public static final String CONCEPT_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String CONCEPT_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String CONCEPT_NOT_FILLED = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	public static final String CONCEPT_NOT_APPLICABLE = "e1d8e10a-1d5f-11e0-b929-000c29ad1d07";
 
 	public static final String VENOUS_PUNCTURE = "3098bd78-a1bb-455c-a724-9c114072b34e";
 	public static final String DIGITAL_PUNCTURE = "9aa935ec-be0f-4038-a1ca-23927bfde672";

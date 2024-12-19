@@ -182,11 +182,12 @@ public class SearchForm {
     }
 
     public void setTypeOfResult(String typeOfResult) {
-        this.typeOfResult = typeOfResult;
+        this.typeOfResult = typeOfResult.split(",")[0]; 
     }
 
     public TypeOfResult getTypeOfResultEnum() {
-        return typeOfResult == null || Constants.ALL.equals(typeOfResult) ? null : TypeOfResult.valueOf(typeOfResult);
+    	System.out.println("Qual eh o valor do typeOfResult aqui? " + typeOfResult); 
+        return typeOfResult == null || Constants.ALL.equals(typeOfResult) ? null : TypeOfResult.valueOf(typeOfResult); 
     }
     
     public LabResultStatus getLabResultStatus() {
