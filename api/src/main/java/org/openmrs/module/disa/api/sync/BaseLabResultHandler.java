@@ -133,12 +133,12 @@ public abstract class BaseLabResultHandler implements LabResultHandler {
         Obs obs1982 = new Obs(person, pregnant, obsDatetime, location);
         if (labResult.getPregnant().trim().equalsIgnoreCase(Constants.YES)
                 || labResult.getPregnant().trim().equalsIgnoreCase(Constants.SIM)) {
-            obs1982.setValueCoded(conceptService.getConceptByUuid(Constants.GESTATION));
+            obs1982.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_YES));
         } else if (labResult.getPregnant().trim().equalsIgnoreCase(Constants.NO)
                 || StringUtils.stripAccents(labResult.getPregnant().trim()).equalsIgnoreCase(Constants.NAO)) {
             obs1982.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NO));
         } else {
-            obs1982.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NOT_FILLED));
+            obs1982.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NOT_APPLICABLE));
         }
         encounter.addObs(obs1982);
 
@@ -152,7 +152,7 @@ public abstract class BaseLabResultHandler implements LabResultHandler {
                 || StringUtils.stripAccents(labResult.getBreastFeeding().trim()).equalsIgnoreCase(Constants.NAO)) {
             obs6332.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NO));
         } else {
-            obs6332.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NOT_FILLED));
+            obs6332.setValueCoded(conceptService.getConceptByUuid(Constants.CONCEPT_NOT_APPLICABLE));
         }
         encounter.addObs(obs6332);
 

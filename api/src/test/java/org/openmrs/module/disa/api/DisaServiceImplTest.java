@@ -75,7 +75,7 @@ public class DisaServiceImplTest extends BaseContextMockTest {
         when(patientService.getPatientIdentifiers(eq(result1.getNid()), anyListOf(PatientIdentifierType.class), any(),
                 any(), any()))
                 .thenReturn(new ArrayList<>());
-        when(labResultService.getAll(any(), any(), any(), eq(LabResultStatus.NOT_PROCESSED), any(), eq(nid),
+        when(labResultService.getAll(any(), any(), any(), eq(LabResultStatus.NOT_PROCESSED), any(), any(), eq(nid),
                 anyList())).thenReturn(Arrays.asList(result1, result2));
 
         disaServiceImpl.mapIdentifier(patientUuid, result1);

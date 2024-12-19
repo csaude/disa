@@ -327,6 +327,7 @@ public class ManageLabResultsControllerTest extends BaseContextMockTest {
                 any(String.class),
                 any(LabResultStatus.class),
                 any(NotProcessingCause.class),
+                any(TypeOfResult.class),
                 any(String.class),
                 anyListOf(String.class)))
                 .thenReturn(labResults);

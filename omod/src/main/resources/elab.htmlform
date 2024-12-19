@@ -67,6 +67,11 @@
         gap: 30px;
       }
 
+      .e-lab .form-row.pcr>div {
+        gap: 5px;
+        margin-right: 20px;
+      }
+
       .pregnant-breastfeeding {
         flex-direction: column;
         padding-left: 0;
@@ -296,7 +301,7 @@
       <div class="header">
         <b>4. Diagnóstico Laboratorial para TB</b>
       </div>
-      <div class="form-row tb">
+<div class="form-row tb">
         <div>
           <obsgroup groupingConceptId="5d11cf23-9c8b-4ee7-a2d4-b81993123d0d">
             <obs id="tbLam" conceptId="ef139cb2-97c1-4c0f-9189-5e0711a45b8f"
@@ -308,9 +313,21 @@
               answerLabels="4+,3+,2+,1+" style="radio" />
           </obsgroup>
         </div>
-      </div>
+</div>
       <div class="header">
-        <b>5. Outros</b>
+        <b>5. Diagnóstico Precoce Infantil</b>
+      </div>
+      <div class="form-row">
+        <div>
+          <obs conceptId="a5e0eb66-c75d-4f2a-956c-3bf4e66b1a84" labelText="Tipo de Colheita - DPI:" answerConceptIds="b0c97813-1b29-4e93-adcd-985275ddeb43,1caecedd-c156-456e-b9ac-87631e70b506,d2c90c58-37ca-4243-a9ff-d1b1607028c6,6ab70bdb-5775-4738-94f3-9f726cfcfa31,0f6b8555-71e6-4c61-bcc3-6815d33940e1,38bc930a-ccd4-4300-b59a-a4aa3ef6f98b,09811d95-96c4-42d4-a77d-680217356240,66498d73-2744-4aa0-bce0-703684002cac" answerLabels="Primeira colheita &lt;9m,Confirmação da primeira colheita &lt;9m,Repetição de colheita por rejeição &lt;9m,
+            Colheita seguinte &lt;9m,Primeira colheita 9-17 meses,Confirmação da primeira colheita 9-17 meses,
+            Repetição de colheita por rejeição 9-17 meses,Colheita seguinte 9-17 meses"/></div><div>
+            <obs conceptId="e1d7f61e-1d5f-11e0-b929-000c29ad1d07" labelText="HIV DNA PCR" answerConceptIds="e1d47386-1d5f-11e0-b929-000c29ad1d07,e1d446cc-1d5f-11e0-b929-000c29ad1d07,e1d89f2e-1d5f-11e0-b929-000c29ad1d07" answerLabels="Pos.,Neg.,Sem Resultado"
+              style="radio" />
+        </div>
+      </div>
+<div class="header">
+        <b>6. Outros</b>
       </div>
       <div class="form-row">
         <div>

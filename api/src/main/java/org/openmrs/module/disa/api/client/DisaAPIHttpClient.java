@@ -119,6 +119,7 @@ public class DisaAPIHttpClient {
 			String requestId,
 			LabResultStatus labResultStatus,
 			NotProcessingCause notProcessingCause,
+			TypeOfResult typeOfResult,
 			String nid,
 			List<String> healthFacilityLabCodes) throws URISyntaxException {
 
@@ -127,6 +128,7 @@ public class DisaAPIHttpClient {
 				.addParameter("requestId", requestId)
 				.addParameter("labResultStatus", labResultStatus != null ? labResultStatus.name() : null)
 				.addParameter("notProcessingCause", notProcessingCause != null ? notProcessingCause.name() : null)
+				.addParameter("typeOfResult", typeOfResult != null ? typeOfResult.name() : null)
 				.addParameter("nid", nid);
 
 		if (startDate != null) {

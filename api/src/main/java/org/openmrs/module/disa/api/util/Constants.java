@@ -31,6 +31,39 @@ public class Constants {
 	public static final String DISA_FORM = "5b7cecc3-4ba3-4710-85ae-fc0c13e83e27";
 	public static final String ORDER_ID = "e8c63cd6-9113-48b2-99cd-6112103f1448";
 	public static final String DISA_NID = "79ad599a-50df-48f8-865c-0095ec9a9d01";
+	
+	public static final String SAMPLE_EID = "a5e0eb66-c75d-4f2a-956c-3bf4e66b1a84";
+	public static final String HIV_PCR_QUAL = "e1d7f61e-1d5f-11e0-b929-000c29ad1d07";
+	public static final String HIV_PCR_NEGATIVE = "e1d446cc-1d5f-11e0-b929-000c29ad1d07";
+	public static final String HIV_PCR_POSITIVE = "e1d47386-1d5f-11e0-b929-000c29ad1d07";
+	public static final String HIV_PCR_INDETERMINATE = "e1d89f2e-1d5f-11e0-b929-000c29ad1d07";
+	
+	public static final String NEGATIV = "Negativ";
+	public static final String POSITIV = "Positiv";
+	public static final String INDETERMINATE = "Indeterm";
+	
+	public static final String PC9M = "b0c97813-1b29-4e93-adcd-985275ddeb43";
+	public static final String CPC9M = "1caecedd-c156-456e-b9ac-87631e70b506";
+	public static final String RCR9M = "d2c90c58-37ca-4243-a9ff-d1b1607028c6";
+	public static final String CS9M = "6ab70bdb-5775-4738-94f3-9f726cfcfa31";
+	public static final String PC9_17M = "0f6b8555-71e6-4c61-bcc3-6815d33940e1";
+	public static final String CPC9_17M = "38bc930a-ccd4-4300-b59a-a4aa3ef6f98b";
+	public static final String RCR9_17M = "09811d95-96c4-42d4-a77d-680217356240";
+	public static final String CS9_17M = "66498d73-2744-4aa0-bce0-703684002cac";
+	
+	public static final String _PC9M = "PC9M";
+	public static final String _CPC9M = "CPC9M";
+	public static final String _RCR9M = "RCR9M";
+	public static final String _CS9M = "CS9M";
+	public static final String _PC9_17M = "PC9_17M";
+	public static final String _CPC9_17M = "CPC9_17M";
+	public static final String _RCR9_17M = "RCR9_17M";
+	public static final String _CS9_17M = "CS9_17M";
+
+	
+	public static final String PCR_EID_NEGATIVE = "Negativ";
+	public static final String PCR_EID_POSITIVE = "Positiv";
+	public static final String PCR_EID_INDETERM = "Indeterm";
 
 	public static final String CD4_ABSOLUTE = "e1dd5ab4-1d5f-11e0-b929-000c29ad1d07";
 	public static final String CD4_PERCENT = "e1d48fba-1d5f-11e0-b929-000c29ad1d07";
@@ -75,6 +108,7 @@ public class Constants {
 	public static final String CONCEPT_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String CONCEPT_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String CONCEPT_NOT_FILLED = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	public static final String CONCEPT_NOT_APPLICABLE = "e1d8e10a-1d5f-11e0-b929-000c29ad1d07";
 
 	public static final String VENOUS_PUNCTURE = "3098bd78-a1bb-455c-a724-9c114072b34e";
 	public static final String DIGITAL_PUNCTURE = "9aa935ec-be0f-4038-a1ca-23927bfde672";
@@ -145,10 +179,11 @@ public class Constants {
 	public static final String NEGATIVE = "e1d446cc-1d5f-11e0-b929-000c29ad1d07";
 	public static final String POSITIVE = "e1d47386-1d5f-11e0-b929-000c29ad1d07";
 	public static final String TB_LAM_POSITIVITY_LEVEL_LABSET = "5d11cf23-9c8b-4ee7-a2d4-b81993123d0d";
-  public static final String POSITIVITY_LEVEL = "303a4480-f2b3-4192-a446-725a401ebb09";
-  public static final String LEVEL_1 = "03d4b7c8-c8cd-4f84-be40-67975bd5b667";
-  public static final String LEVEL_2 = "79f4bd59-0dbb-41ba-9d78-3efc0b737b75";
-  public static final String LEVEL_3 = "a4e43a4d-37ea-4767-a700-9fe1d43a8042";
-  public static final String LEVEL_4 = "16c13c13-2f85-4492-ae9b-4358b34070e7";
+	public static final String POSITIVITY_LEVEL = "303a4480-f2b3-4192-a446-725a401ebb09";
+	public static final String LEVEL_1 = "03d4b7c8-c8cd-4f84-be40-67975bd5b667";
+	public static final String LEVEL_2 = "79f4bd59-0dbb-41ba-9d78-3efc0b737b75";
+	public static final String LEVEL_3 = "a4e43a4d-37ea-4767-a700-9fe1d43a8042";
+	public static final String LEVEL_4 = "16c13c13-2f85-4492-ae9b-4358b34070e7";
 	public static final String CRAG = "f3883e12-4883-461b-8440-2a02f3312a84";
+	public static final String TBLAM_GROUP = "9a9377fd-f528-402c-b412-7d04988fba01";
 }

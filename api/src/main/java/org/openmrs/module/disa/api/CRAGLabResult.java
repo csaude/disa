@@ -10,4 +10,9 @@ public class CRAGLabResult extends LabResult {
         super(l);
         setTypeOfResult(TypeOfResult.CRAG);
     }
+    
+    @Override
+    public String toString() {
+    	return "CRAGLabResult [requestId=" + getRequestId() + "]";
+    }
 }
