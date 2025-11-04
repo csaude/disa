@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // TODO Should be an OpenMRS rest web service
 @RestController
-@RequestMapping("/module/disa/orgunits")
+@RequestMapping("/module/disa/")
 public class OrgUnitController {
 
     private static final Logger log = LoggerFactory.getLogger(OrgUnitController.class);
@@ -33,7 +33,7 @@ public class OrgUnitController {
         this.orgUnitService = orgUnitService;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "orgunits/search.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OrgUnit>> searchOrgUnits(@RequestParam String term) {
         return ResponseEntity.ok().body(orgUnitService.searchOrgUnits(term));
     }
