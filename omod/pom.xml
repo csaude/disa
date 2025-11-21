@@ -154,6 +154,26 @@
 			<version>1.0.0.GA</version>
 			<scope>provided</scope>
 		</dependency>
+		
+    <dependency>
+        <groupId>org.openmrs.module</groupId>
+        <artifactId>disa-api</artifactId>
+        <version>2.7.1-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+
+<!--    <dependency>-->
+<!--        <groupId>org.openmrs.module</groupId>-->
+<!--        <artifactId>locationbasedaccess</artifactId>-->
+<!--        <version>0.3.0-SNAPSHOT</version>-->
+<!--        <scope>provided</scope>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--    	<groupId>org.openmrs.module</groupId>-->
+<!--    	<artifactId>locationbasedaccess-api</artifactId>-->
+<!--    	<version>0.3.0-SNAPSHOT</version>-->
+<!--    </dependency>-->
 	</dependencies>
 
 	<build>
