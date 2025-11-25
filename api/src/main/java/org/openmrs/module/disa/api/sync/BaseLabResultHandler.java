@@ -80,6 +80,16 @@ public abstract class BaseLabResultHandler implements LabResultHandler {
 
     @Override
     public LabResultStatus handle(LabResult labResult) {
+    	
+    	// only for "amostra rejeitada"
+        if (labResult.getFinalResult() != null 
+                && labResult.getFinalResult().equalsIgnoreCase("amostra_rejeitada")) {
+
+            labResult.setLabResultStatus(LabResultStatus.REJECTED);
+            return LabResultStatus.REJECTED;
+        }
+    	
+        // continue with the chain
         if (next != null) {
             return next.handle(labResult);
         }

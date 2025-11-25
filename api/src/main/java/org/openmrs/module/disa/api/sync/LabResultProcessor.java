@@ -18,6 +18,8 @@ public class LabResultProcessor {
             processed++;
         } else if (status == LabResultStatus.NOT_PROCESSED) {
             notProcessed++;
+        } else if (status == LabResultStatus.REJECTED) {
+            notProcessed++;
         }
     }
 

@@ -100,7 +100,11 @@ public class ViralLoadFormSchedulerTask extends AbstractTask {
 		for (int i = 0; i < labResults.size(); i++) {
 			LabResult labResult = labResults.get(i);
 			logger.debug("Processing {}", labResult);
+			
 			labResultProcessor.processResult(labResult);
+			
+			labResultService.updateLabResult(labResult); 
+			
 			syncStatus = syncStatus.withProgress(i / (float) labResults.size());
 		}
 

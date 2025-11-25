@@ -53,6 +53,8 @@ public abstract class LabResult {
 	private String harvestType;
 
 	private LocalDateTime dateOfSampleReceive;
+	
+	private String rejectedReason;
 
 	private LocalDateTime processingDate;
 
@@ -287,6 +289,14 @@ public abstract class LabResult {
 
 	public void setDateOfSampleReceive(LocalDateTime dateOfSampleReceive) {
 		this.dateOfSampleReceive = dateOfSampleReceive;
+	}
+	
+	public String getRejectedReason() {
+		return rejectedReason;
+	}
+	
+	public void setRejectedReason(String rejectedReason) {
+		this.rejectedReason = rejectedReason;
 	}
 
 	public LocalDateTime getProcessingDate() {
