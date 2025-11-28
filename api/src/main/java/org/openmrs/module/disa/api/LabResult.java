@@ -418,6 +418,10 @@ public abstract class LabResult {
 	public boolean isProcessed() {
 		return LabResultStatus.PROCESSED == labResultStatus;
 	}
+	
+	public boolean isRejected() {
+		return LabResultStatus.REJECTED  == labResultStatus;
+	}
 
 	public LocalDateTime getHarvestDate() {
 		return harvestDate;

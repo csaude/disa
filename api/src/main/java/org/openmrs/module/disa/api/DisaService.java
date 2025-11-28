@@ -57,7 +57,7 @@ public interface DisaService extends OpenmrsService {
 	@Authorized("Mapear pacientes no Disa Interoperabilidade")
 	Patient mapIdentifier(String patientUuid, LabResult disa);
 
-	void handleProcessedLabResult(LabResult labResult, Encounter encounter);
+	void handleProcessedAndRejectedLabResult(LabResult labResult, Encounter encounter);
 
 	/**
 	 * Get

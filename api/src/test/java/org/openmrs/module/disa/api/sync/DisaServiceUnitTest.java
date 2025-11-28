@@ -56,7 +56,7 @@ public class DisaServiceUnitTest extends BaseContextMockTest {
         location.setUuid("93377be8-1093-47f0-ad05-e014d3a14615");
         when(locationService.getDefaultLocation()).thenReturn(location);
 
-        disaService.handleProcessedLabResult(labResult, encounter);
+        disaService.handleProcessedAndRejectedLabResult(labResult, encounter);
 
         verify(encounterService, times(1)).saveEncounter(encounter);
     }
@@ -76,7 +76,7 @@ public class DisaServiceUnitTest extends BaseContextMockTest {
         location.setUuid("93377be8-1093-47f0-ad05-e014d3a14615");
         when(locationService.getDefaultLocation()).thenReturn(location);
 
-        disaService.handleProcessedLabResult(labResult, encounter);
+        disaService.handleProcessedAndRejectedLabResult(labResult, encounter);
 
         verify(disaDAO, times(1)).saveSyncLog(any(SyncLog.class));
     }
@@ -97,7 +97,7 @@ public class DisaServiceUnitTest extends BaseContextMockTest {
         defaultLocation.setUuid("93377be8-1093-47f0-ad05-e014d3a14615");
         when(locationService.getDefaultLocation()).thenReturn(defaultLocation);
 
-        disaService.handleProcessedLabResult(labResult, encounter);
+        disaService.handleProcessedAndRejectedLabResult(labResult, encounter);
 
         assertThat(labResult.getLabResultStatus(), is(LabResultStatus.PROCESSED));
         verify(labResultService, times(1)).updateLabResult(any(LabResult.class));
