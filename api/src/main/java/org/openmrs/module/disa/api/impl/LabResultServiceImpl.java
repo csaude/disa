@@ -28,6 +28,7 @@ import org.openmrs.module.disa.api.TypeOfResult;
 import org.openmrs.module.disa.api.client.DisaAPIHttpClient;
 import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.util.Constants;
+import org.openmrs.module.disa.api.util.DisaUserPropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -39,256 +40,241 @@ import org.springframework.web.client.ResourceAccessException;
 @Service
 public class LabResultServiceImpl extends BaseOpenmrsService implements LabResultService {
 
-    private DisaAPIHttpClient client;
-    private OrgUnitService orgUnitService;
-    private AdministrationService administrationService;
-    private DisaService disaService;
+	private DisaAPIHttpClient client;
+	private OrgUnitService orgUnitService;
+	private AdministrationService administrationService;
+	private DisaService disaService;
 
-    @Autowired
-    public LabResultServiceImpl(
-            DisaAPIHttpClient client,
-            OrgUnitService orgUnitService,
-            @Qualifier("adminService") AdministrationService administrationService) {
-        this.client = client;
-        this.orgUnitService = orgUnitService;
-        this.administrationService = administrationService;
-    }
+	@Autowired
+	public LabResultServiceImpl(DisaAPIHttpClient client, OrgUnitService orgUnitService,
+			@Qualifier("adminService") AdministrationService administrationService) {
+		this.client = client;
+		this.orgUnitService = orgUnitService;
+		this.administrationService = administrationService;
+	}
 
-    @Override
-    public Page<LabResult> search(
-            LocalDate startDate, LocalDate endDate,
-            String requestId,
-            LabResultStatus labResultStatus, NotProcessingCause notProcessingCause,
-            TypeOfResult typeOfResult,
-            String nid, List<String> healthFacilityLabCodes,
-            String search,
-            int pageNumber, int pageSize,
-            String orderBy, String direction) {
+	@Override
+	public Page<LabResult> search(LocalDate startDate, LocalDate endDate, String requestId,
+			LabResultStatus labResultStatus, NotProcessingCause notProcessingCause, TypeOfResult typeOfResult,
+			String nid, List<String> healthFacilityLabCodes, String search, int pageNumber, int pageSize,
+			String orderBy, String direction) {
 
-        try {
+		List<String> validHealthFacilityLabCodes = DisaUserPropertyUtil.validateSismaCode(healthFacilityLabCodes);
 
-            if (healthFacilityLabCodes.isEmpty()) {
-                throw new DisaModuleAPIException("disa.health.facility.required", (Object[]) null);
-            }
+		try {
 
-            LocalDateTime start = null;
-            LocalDateTime end = null;
-            if (startDate != null) {
-                start = startDate.atStartOfDay();
-            }
-            if (endDate != null) {
-                end = endDate.atTime(23, 0);
-            }
+			if (healthFacilityLabCodes.isEmpty()) {
+				throw new DisaModuleAPIException("disa.health.facility.required", (Object[]) null);
+			}
 
-            Page<LabResult> page = client.searchLabResults(start, end, requestId,
-                    labResultStatus,
-                    notProcessingCause,
-                    typeOfResult,
-                    nid, healthFacilityLabCodes,
-                    search,
-                    pageNumber, pageSize, orderBy, direction);
+			LocalDateTime start = null;
+			LocalDateTime end = null;
+			if (startDate != null) {
+				start = startDate.atStartOfDay();
+			}
+			if (endDate != null) {
+				end = endDate.atTime(23, 0);
+			}
 
-            disaService.loadEncounters(page.getResultList());
+			Page<LabResult> page = client.searchLabResults(start, end, requestId, labResultStatus, notProcessingCause,
+					typeOfResult, nid, validHealthFacilityLabCodes, search, pageNumber, pageSize, orderBy, direction);
 
-            return page;
+			disaService.loadEncounters(page.getResultList());
 
-        } catch (HttpStatusCodeException e) {
-            throw handleHttpResponseException(e.getStatusCode().value(), healthFacilityLabCodes,
-                    "disa.result.search.error");
-        } catch (ResourceAccessException e) {
-            if (probableConnectivityIssue(e)) {
-                throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
-            } else {
-                throw e;
-            }
-        } catch (URISyntaxException e) {
-            throw new DisaModuleAPIException("disa.result.search.error", (Object[]) null, e);
-        }
-    }
+			return page;
 
-    @Override
-    public List<LabResult> getAll(
-            LocalDate startDate, LocalDate endDate,
-            String requestId,
-            LabResultStatus labResultStatus, 
-            NotProcessingCause notProcessingCause,
-            TypeOfResult typeOfResult,
-            String nid, List<String> healthFacilityLabCodes) {
-    	
-        try {
+		} catch (HttpStatusCodeException e) {
+			throw handleHttpResponseException(e.getStatusCode().value(), validHealthFacilityLabCodes,
+					"disa.result.search.error");
+		} catch (ResourceAccessException e) {
+			if (probableConnectivityIssue(e)) {
+				throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
+			} else {
+				throw e;
+			}
+		} catch (URISyntaxException e) {
+			throw new DisaModuleAPIException("disa.result.search.error", (Object[]) null, e);
+		}
+	}
 
-            if (healthFacilityLabCodes.isEmpty()) {
-                throw new DisaModuleAPIException("disa.health.facility.required", (Object[]) null);
-            }
+	@Override
+	public List<LabResult> getAll(LocalDate startDate, LocalDate endDate, String requestId,
+			LabResultStatus labResultStatus, NotProcessingCause notProcessingCause, TypeOfResult typeOfResult,
+			String nid, List<String> healthFacilityLabCodes) {
+		
+		List<String> validHealthFacilityLabCodes = DisaUserPropertyUtil.validateSismaCode(healthFacilityLabCodes);
 
-            LocalDateTime start = null;
-            LocalDateTime end = null;
-            if (startDate != null) {
-                start = startDate.atStartOfDay();
-            }
-            if (endDate != null) {
-                end = endDate.atTime(23, 0);
-            }
 
-            return client.getAllLabResults(start, end, requestId,
-                    labResultStatus,
-                    notProcessingCause, typeOfResult, nid, healthFacilityLabCodes);
-        } catch (HttpStatusCodeException e) {
-            throw handleHttpResponseException(e.getStatusCode().value(), healthFacilityLabCodes,
-                    "disa.result.export.error");
-        } catch (ResourceAccessException e) {
-            if (probableConnectivityIssue(e)) {
-                throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
-            } else {
-                throw e;
-            }
-        } catch (URISyntaxException e) {
-            throw new DisaModuleAPIException("disa.result.export.error", (Object[]) null, e);
-        }
-    }
+		try {
 
-    @Override
-    public LabResult getById(long id) {
-        try {
-            return client.getResultById(id);
-        } catch (HttpStatusCodeException e) {
-            throw handleHttpResponseException(e.getStatusCode().value(), Collections.emptyList(),
-                    "disa.result.get.error");
-        } catch (ResourceAccessException e) {
-            if (probableConnectivityIssue(e)) {
-                throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
-            } else {
-                throw e;
-            }
-        } catch (URISyntaxException e) {
-            throw new DisaModuleAPIException("disa.result.get.error", (Object[]) null, e);
-        }
-    }
+			if (healthFacilityLabCodes.isEmpty()) {
+				throw new DisaModuleAPIException("disa.health.facility.required", (Object[]) null);
+			}
 
-    @Override
-    public void deleteById(long id) {
-        try {
-            client.deleteResultById(id);
-        } catch (HttpStatusCodeException e) {
-            throw handleHttpResponseException(e.getStatusCode().value(), Collections.emptyList(),
-                    "disa.result.delete.error");
-        } catch (ResourceAccessException e) {
-            if (probableConnectivityIssue(e)) {
-                throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
-            } else {
-                throw e;
-            }
-        } catch (IOException | URISyntaxException e) {
-            throw new DisaModuleAPIException("disa.result.delete.error", (Object[]) null, e);
-        }
+			LocalDateTime start = null;
+			LocalDateTime end = null;
+			if (startDate != null) {
+				start = startDate.atStartOfDay();
+			}
+			if (endDate != null) {
+				end = endDate.atTime(23, 0);
+			}
 
-    }
+			return client.getAllLabResults(start, end, requestId, labResultStatus, notProcessingCause, typeOfResult,
+					nid, validHealthFacilityLabCodes);
+		} catch (HttpStatusCodeException e) {
+			throw handleHttpResponseException(e.getStatusCode().value(), validHealthFacilityLabCodes,
+					"disa.result.export.error");
+		} catch (ResourceAccessException e) {
+			if (probableConnectivityIssue(e)) {
+				throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
+			} else {
+				throw e;
+			}
+		} catch (URISyntaxException e) {
+			throw new DisaModuleAPIException("disa.result.export.error", (Object[]) null, e);
+		}
+	}
 
-    @Override
-    public LabResult reallocateLabResult(long id, OrgUnit destination) {
-        OrgUnit orgUnit = orgUnitService.getOrgUnitByCode(destination.getCode());
-        LabResult labResult = getById(id);
-        labResult.setHealthFacilityLabCode(orgUnit.getCode());
-        labResult.setRequestingFacilityName(orgUnit.getFacility());
-        labResult.setRequestingDistrictName(orgUnit.getDistrict());
-        labResult.setRequestingProvinceName(orgUnit.getProvince());
-        labResult.setLabResultStatus(LabResultStatus.PENDING);
-        updateLabResult(labResult);
-        return labResult;
-    }
+	@Override
+	public LabResult getById(long id) {
+		try {
+			return client.getResultById(id);
+		} catch (HttpStatusCodeException e) {
+			throw handleHttpResponseException(e.getStatusCode().value(), Collections.emptyList(),
+					"disa.result.get.error");
+		} catch (ResourceAccessException e) {
+			if (probableConnectivityIssue(e)) {
+				throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
+			} else {
+				throw e;
+			}
+		} catch (URISyntaxException e) {
+			throw new DisaModuleAPIException("disa.result.get.error", (Object[]) null, e);
+		}
+	}
 
-    @Override
-    public void rescheduleLabResult(long id) {
-        LabResult labResult = getById(id);
-        labResult.setLabResultStatus(LabResultStatus.PENDING);
-        updateLabResult(labResult);
-    }
+	@Override
+	public void deleteById(long id) {
+		try {
+			client.deleteResultById(id);
+		} catch (HttpStatusCodeException e) {
+			throw handleHttpResponseException(e.getStatusCode().value(), Collections.emptyList(),
+					"disa.result.delete.error");
+		} catch (ResourceAccessException e) {
+			if (probableConnectivityIssue(e)) {
+				throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
+			} else {
+				throw e;
+			}
+		} catch (IOException | URISyntaxException e) {
+			throw new DisaModuleAPIException("disa.result.delete.error", (Object[]) null, e);
+		}
 
-    @Override
-    public List<String> getHealthFacilityLabCodes() {
-        List<String> hfCodes = new ArrayList<>();
+	}
 
-        GlobalProperty gp = administrationService.getGlobalPropertyObject(Constants.DISA_SISMA_CODE);
-        if (gp == null || StringUtils.isEmpty(gp.getPropertyValue())) {
-            throw new DisaModuleAPIException("disa.config.sisma.codes.error",
-                    new Object[] { Constants.DISA_SISMA_CODE });
-        }
-        hfCodes.addAll(Arrays.asList(gp.getPropertyValue().split(",")));
+	@Override
+	public LabResult reallocateLabResult(long id, OrgUnit destination) {
+		OrgUnit orgUnit = orgUnitService.getOrgUnitByCode(destination.getCode());
+		LabResult labResult = getById(id);
+		labResult.setHealthFacilityLabCode(orgUnit.getCode());
+		labResult.setRequestingFacilityName(orgUnit.getFacility());
+		labResult.setRequestingDistrictName(orgUnit.getDistrict());
+		labResult.setRequestingProvinceName(orgUnit.getProvince());
+		labResult.setLabResultStatus(LabResultStatus.PENDING);
+		updateLabResult(labResult);
+		return labResult;
+	}
 
-        return hfCodes;
-    }
+	@Override
+	public void rescheduleLabResult(long id) {
+		LabResult labResult = getById(id);
+		labResult.setLabResultStatus(LabResultStatus.PENDING);
+		updateLabResult(labResult);
+	}
 
-    @Override
-    public void updateLabResult(LabResult labResult) {
-        try {
-            client.updateResult(labResult);
-        } catch (HttpResponseException e) {
-            throw handleHttpResponseException(e.getStatusCode(),
-                    Collections.singletonList(labResult.getHealthFacilityLabCode()),
-                    "disa.result.update.error");
-        } catch (UnknownHostException | ConnectException | SocketTimeoutException e) {
-            throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
-        } catch (IOException | URISyntaxException e) {
-            throw new DisaModuleAPIException("disa.result.update.error", (Object[]) null, e);
-        }
-    }
+	@Override
+	public List<String> getHealthFacilityLabCodes() {
+		List<String> hfCodes = new ArrayList<>();
 
-    @Override
-    public List<LabResult> getResultsToSync() {
-        return getAll(null, null, null, LabResultStatus.PENDING, null, null, null, getHealthFacilityLabCodes());
-    }
+		GlobalProperty gp = administrationService.getGlobalPropertyObject(Constants.DISA_SISMA_CODE);
+		if (gp == null || StringUtils.isEmpty(gp.getPropertyValue())) {
+			throw new DisaModuleAPIException("disa.config.sisma.codes.error",
+					new Object[] { Constants.DISA_SISMA_CODE });
+		}
+		hfCodes.addAll(Arrays.asList(gp.getPropertyValue().split(",")));
 
-    private boolean probableConnectivityIssue(ResourceAccessException e) {
-        return e.getCause() instanceof ConnectException
-                || e.getCause() instanceof SocketTimeoutException
-                || e.getCause() instanceof UnknownHostException;
-    }
+		return hfCodes;
+	}
 
-    private DisaModuleAPIException handleHttpResponseException(int statusCode,
-            List<String> healthFacilityLabCodes,
-            String defaultMessage) {
-    	
-        HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
-        if (httpStatus == HttpStatus.FORBIDDEN) {
-            String sismaCode = null;
+	@Override
+	public void updateLabResult(LabResult labResult) {
+		try {
+			client.updateResult(labResult);
+		} catch (HttpResponseException e) {
+			throw handleHttpResponseException(e.getStatusCode(),
+					Collections.singletonList(labResult.getHealthFacilityLabCode()), "disa.result.update.error");
+		} catch (UnknownHostException | ConnectException | SocketTimeoutException e) {
+			throw new DisaModuleAPIException("disa.result.no.internet", (Object[]) null, e);
+		} catch (IOException | URISyntaxException e) {
+			throw new DisaModuleAPIException("disa.result.update.error", (Object[]) null, e);
+		}
+	}
 
-            // If the search contains only one health facility, then we can use that one in
-            // the error message.
-            // Otherwise, we need to find the first one that is not authorized.
-            if (healthFacilityLabCodes.size() == 1) {
-                sismaCode = healthFacilityLabCodes.get(0);
-            } else {
-                sismaCode = findUnauthorisedSismaCode(healthFacilityLabCodes);
-            }
+	@Override
+	public List<LabResult> getResultsToSync() {
+		return getAll(null, null, null, LabResultStatus.PENDING, null, null, null, getHealthFacilityLabCodes());
+	}
 
-            // Display a generic message only if we cannot find the unauthorized health
-            // facility.
-            String message = "disa.result.unauthorized.generic";
-            if (sismaCode != null) {
-                message = "disa.result.unauthorized";
-            }
-            return new DisaModuleAPIException(message, new String[] { sismaCode });
-        }
+	private boolean probableConnectivityIssue(ResourceAccessException e) {
+		return e.getCause() instanceof ConnectException || e.getCause() instanceof SocketTimeoutException
+				|| e.getCause() instanceof UnknownHostException;
+	}
 
-        if (httpStatus == HttpStatus.UNAUTHORIZED) {
-            return new DisaModuleAPIException("disa.api.authentication.error", new String[] {});
-        }
+	private DisaModuleAPIException handleHttpResponseException(int statusCode, List<String> healthFacilityLabCodes,
+			String defaultMessage) {
 
-        if (httpStatus == HttpStatus.NOT_FOUND) {
-            return new DisaModuleAPIException("disa.result.not.found", (Object[]) null);
-        }
+		HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
+		if (httpStatus == HttpStatus.FORBIDDEN) {
+			String sismaCode = null;
 
-        return new DisaModuleAPIException(defaultMessage, (Object[]) null);
-    }
+			// If the search contains only one health facility, then we can use that one in
+			// the error message.
+			// Otherwise, we need to find the first one that is not authorized.
+			if (healthFacilityLabCodes.size() == 1) {
+				sismaCode = healthFacilityLabCodes.get(0);
+			} else {
+				sismaCode = findUnauthorisedSismaCode(healthFacilityLabCodes);
+			}
 
-    private String findUnauthorisedSismaCode(List<String> healthFacilityLabCodes) {
-        return client.findUnauthorisedSismaCode(healthFacilityLabCodes);
-    }
+			// Display a generic message only if we cannot find the unauthorized health
+			// facility.
+			String message = "disa.result.unauthorized.generic";
+			if (sismaCode != null) {
+				message = "disa.result.unauthorized";
+			}
+			return new DisaModuleAPIException(message, new String[] { sismaCode });
+		}
 
-    // Use setter injection to handle the circular dependency.
-    // TODO remove circular dependency
-    @Autowired
-    public void setDisaService(DisaService disaService) {
-        this.disaService = disaService;
-    }
+		if (httpStatus == HttpStatus.UNAUTHORIZED) {
+			return new DisaModuleAPIException("disa.api.authentication.error", new String[] {});
+		}
+
+		if (httpStatus == HttpStatus.NOT_FOUND) {
+			return new DisaModuleAPIException("disa.result.not.found", (Object[]) null);
+		}
+
+		return new DisaModuleAPIException(defaultMessage, (Object[]) null);
+	}
+
+	private String findUnauthorisedSismaCode(List<String> healthFacilityLabCodes) {
+		return client.findUnauthorisedSismaCode(healthFacilityLabCodes);
+	}
+
+	// Use setter injection to handle the circular dependency.
+	// TODO remove circular dependency
+	@Autowired
+	public void setDisaService(DisaService disaService) {
+		this.disaService = disaService;
+	}
 }

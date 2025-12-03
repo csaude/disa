@@ -22,6 +22,7 @@ import org.openmrs.module.disa.api.exception.DisaModuleAPIException;
 import org.openmrs.module.disa.api.report.StagingServerReport;
 import org.openmrs.module.disa.api.sync.SyncStatusService;
 import org.openmrs.module.disa.api.util.Constants;
+import org.openmrs.module.disa.api.util.DisaUserPropertyUtil;
 import org.openmrs.module.disa.web.model.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,147 +54,131 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SessionAttributes({ "flashMessage" })
 public class ManageLabResultsController {
 
-    private static final Logger log = LoggerFactory.getLogger(ManageLabResultsController.class);
+	private static final Logger log = LoggerFactory.getLogger(ManageLabResultsController.class);
 
-    private LabResultService labResultService;
+	private LabResultService labResultService;
 
-    private MessageSourceService messageSourceService;
+	private MessageSourceService messageSourceService;
 
-    private AdministrationService administrationService;
+	private AdministrationService administrationService;
 
-    private ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
-    private OrgUnitService orgUnitService;
+	private OrgUnitService orgUnitService;
 
-    private SyncStatusService syncStatusService;
+	private SyncStatusService syncStatusService;
 
-    @Autowired
-    public ManageLabResultsController(
-            LabResultService labResultService,
-            MessageSourceService messageSourceService,
-            @Qualifier("adminService") AdministrationService administrationService,
-            ObjectMapper objectMapper,
-            OrgUnitService orgUnitService,
-            SyncStatusService syncStatusService) {
-        this.labResultService = labResultService;
-        this.messageSourceService = messageSourceService;
-        this.administrationService = administrationService;
-        this.objectMapper = objectMapper;
-        this.orgUnitService = orgUnitService;
-        this.syncStatusService = syncStatusService;
-    }
+	@Autowired
+	public ManageLabResultsController(LabResultService labResultService, MessageSourceService messageSourceService,
+			@Qualifier("adminService") AdministrationService administrationService, ObjectMapper objectMapper,
+			OrgUnitService orgUnitService, SyncStatusService syncStatusService) {
+		this.labResultService = labResultService;
+		this.messageSourceService = messageSourceService;
+		this.administrationService = administrationService;
+		this.objectMapper = objectMapper;
+		this.orgUnitService = orgUnitService;
+		this.syncStatusService = syncStatusService;
+	}
 
-    @RequestMapping(value = "managelabresults.form", method = RequestMethod.GET)
-    public String search(
-            @RequestParam MultiValueMap<String, String> params,
-            @Valid SearchForm searchForm,
-            BindingResult result,
-            ModelMap model,
-            HttpSession session,
-            HttpServletRequest request) {
 
-        try {
 
-            populateSismaCodes(model);
+	@RequestMapping(value = "managelabresults.form", method = RequestMethod.GET)
+	public String search(@RequestParam MultiValueMap<String, String> params, @Valid SearchForm searchForm,
+			BindingResult result, ModelMap model, HttpSession session, HttpServletRequest request) {
 
-            if (result.hasErrors()) {
-                model.addAttribute(searchForm);
-            } else {
-                String exportUri = ServletUriComponentsBuilder.fromServletMapping(request)
-                        .queryParams(params)
-                        .pathSegment("module", "disa", "managelabresults", "export.form")
-                        .build()
-                        .toUriString();
-                model.addAttribute("exportUri", exportUri);
+		try {
+			populateSismaCodes(model);
 
-                model.addAttribute("disaPage", searchLabResults(searchForm));
-                session.setAttribute("lastSearchParams", params);
-            }
+			if (result.hasErrors()) {
+				model.addAttribute(searchForm);
+			} else {
+				String exportUri = ServletUriComponentsBuilder.fromServletMapping(request).queryParams(params)
+						.pathSegment("module", "disa", "managelabresults", "export.form").build().toUriString();
+				model.addAttribute("exportUri", exportUri);
 
-        } catch (DisaModuleAPIException e) {
-            log.error("", e);
-            model.addAttribute("flashMessage", e.getLocalizedMessage());
-            return "/module/disa/managelabresults/error";
-        }
+				model.addAttribute("disaPage", searchLabResults(searchForm));
+				session.setAttribute("lastSearchParams", params);
+			}
 
-        return "/module/disa/managelabresults/index";
-    }
+		} catch (DisaModuleAPIException e) {
+			log.error("", e);
+			model.addAttribute("flashMessage", e.getLocalizedMessage());
+			return "/module/disa/managelabresults/error";
+		}
 
-    @ResponseBody
-    @RequestMapping(value = "managelabresults/json.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String searchJson(@Valid SearchForm searchForm) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(searchLabResults(searchForm));
-    }
+		return "/module/disa/managelabresults/index";
+	}
 
-    @RequestMapping(value = "managelabresults/export.form", method = RequestMethod.GET)
-    public String export(@Valid SearchForm searchForm, ModelMap model, HttpSession session) {
+	@ResponseBody
+	@RequestMapping(value = "managelabresults/json.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String searchJson(@Valid SearchForm searchForm) throws JsonProcessingException {
+		return objectMapper.writeValueAsString(searchLabResults(searchForm));
+	}
 
-        @SuppressWarnings("unchecked")
-        String query = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .queryParams((MultiValueMap<String, String>) session.getAttribute("lastSearchParams"))
-                .build()
-                .getQuery();
+	@RequestMapping(value = "managelabresults/export.form", method = RequestMethod.GET)
+	public String export(@Valid SearchForm searchForm, ModelMap model, HttpSession session) {
 
-        if (searchForm.getStartDate() == null || searchForm.getEndDate() == null) {
-            model.addAttribute("flashMessage", messageSourceService.getMessage("disa.error.date.range", null,
-                    Context.getLocale()));
-            return "redirect:/module/disa/managelabresults.form?" + query;
-        }
-        return "redirect:/module/disa/managelabresults/download.form?" + query;
-    }
+		@SuppressWarnings("unchecked")
+		String query = ServletUriComponentsBuilder.fromCurrentRequest()
+				.queryParams((MultiValueMap<String, String>) session.getAttribute("lastSearchParams")).build()
+				.getQuery();
 
-    @RequestMapping(value = "managelabresults/download.form", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> download(
-            @Valid SearchForm searchForm,
-            ModelMap model) throws IOException {
+		if (searchForm.getStartDate() == null || searchForm.getEndDate() == null) {
+			model.addAttribute("flashMessage",
+					messageSourceService.getMessage("disa.error.date.range", null, Context.getLocale()));
+			return "redirect:/module/disa/managelabresults.form?" + query;
+		}
+		return "redirect:/module/disa/managelabresults/download.form?" + query;
+	}
 
-        if (searchForm.getStartDate() == null || searchForm.getEndDate() == null) {
-            model.addAttribute("flashMessage", messageSourceService.getMessage("disa.error.date.range", null,
-                    Context.getLocale()));
-            return ResponseEntity.badRequest().body(new byte[] {});
-        }
+	@RequestMapping(value = "managelabresults/download.form", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> download(@Valid SearchForm searchForm, ModelMap model) throws IOException {
 
-        StagingServerReport report = new StagingServerReport(messageSourceService);
-        report.addStagingServerSheet(getAllLabResults(searchForm));
+		if (searchForm.getStartDate() == null || searchForm.getEndDate() == null) {
+			model.addAttribute("flashMessage",
+					messageSourceService.getMessage("disa.error.date.range", null, Context.getLocale()));
+			return ResponseEntity.badRequest().body(new byte[] {});
+		}
 
-        return ResponseEntity.ok()
-                .contentType(new MediaType("application", "ms-excel"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=" + StagingServerReport.REPORT_NAME + ".xls")
-                .body(report.generateReport());
-    }
+		StagingServerReport report = new StagingServerReport(messageSourceService);
+		report.addStagingServerSheet(getAllLabResults(searchForm));
 
-    @RequestMapping(value = "managelabresults/{id}.form", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
-        labResultService.deleteById(id);
-    }
+		return ResponseEntity.ok().contentType(new MediaType("application", "ms-excel"))
+				.header(HttpHeaders.CONTENT_DISPOSITION,
+						"attachment; filename=" + StagingServerReport.REPORT_NAME + ".xls")
+				.body(report.generateReport());
+	}
 
-    @RequestMapping(value = "managelabresults/{id}/reschedule.form", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public void reschedule(@PathVariable long id) {
-        labResultService.rescheduleLabResult(id);
+	@RequestMapping(value = "managelabresults/{id}.form", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable long id) {
+		labResultService.deleteById(id);
+	}
 
-    }
+	@RequestMapping(value = "managelabresults/{id}/reschedule.form", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public void reschedule(@PathVariable long id) {
+		labResultService.rescheduleLabResult(id);
 
-    @ModelAttribute("syncStatus")
-    private Map<String, String> getSyncStatus() {
-        HashMap<String, String> syncStatus = new HashMap<>();
-        syncStatus.put("lastExecution", syncStatusService.getLastExecutionMessage());
-        syncStatus.put("currentExecution", syncStatusService.getCurrentExecutionMessage());
-        return syncStatus;
-    }
+	}
 
-    @ModelAttribute("pageTitle")
-    private void setPageTitle(ModelMap model) {
-        String openMrs = messageSourceService.getMessage("openmrs.title", null, Context.getLocale());
-        String pageTitle = messageSourceService.getMessage("disa.list.viral.load.results.manage", null,
-                Context.getLocale());
-        model.addAttribute("pageTitle", openMrs + " - " + pageTitle);
-    }
+	@ModelAttribute("syncStatus")
+	private Map<String, String> getSyncStatus() {
+		HashMap<String, String> syncStatus = new HashMap<>();
+		syncStatus.put("lastExecution", syncStatusService.getLastExecutionMessage());
+		syncStatus.put("currentExecution", syncStatusService.getCurrentExecutionMessage());
+		return syncStatus;
+	}
 
-    /**
+	@ModelAttribute("pageTitle")
+	private void setPageTitle(ModelMap model) {
+		String openMrs = messageSourceService.getMessage("openmrs.title", null, Context.getLocale());
+		String pageTitle = messageSourceService.getMessage("disa.list.viral.load.results.manage", null,
+				Context.getLocale());
+		model.addAttribute("pageTitle", openMrs + " - " + pageTitle);
+	}
+
+	  /**
      * Populates SISMA code dropdown options.
      */
     private void populateSismaCodes(ModelMap model) {
@@ -201,8 +186,11 @@ public class ManageLabResultsController {
                 .getPropertyValue();
         List<String> sismaCodes = Arrays.asList(propertyValue.split(","));
         Map<String, String> orgUnits = new HashMap<>();
+		List<String> validHealthFacilityLabCodes = DisaUserPropertyUtil.validateSismaCode(sismaCodes);
 
-        for (String code : sismaCodes) {
+
+        for (String code : validHealthFacilityLabCodes) {
+        	
             OrgUnit ou = orgUnitService.getOrgUnitByCode(code);
             if (ou != null) {
                 orgUnits.put(ou.getCode(), ou.getFacility() + " - " + ou.getCode());
@@ -212,36 +200,26 @@ public class ManageLabResultsController {
         model.addAttribute("orgUnits", orgUnits);
     }
 
-    private Page<LabResult> searchLabResults(SearchForm searchForm) {
-        return labResultService.search(
-                searchForm.getStartLocalDate(),
-                searchForm.getEndLocalDate(),
-                searchForm.getNormalizedRequestId(),
-                searchForm.getLabResultStatus(),
-                searchForm.getNotProcessingCauseEnum(),
-                searchForm.getTypeOfResultEnum(),
-                searchForm.getNid(),
-                searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
-                        ? labResultService.getHealthFacilityLabCodes()
-                        : Arrays.asList(searchForm.getSismaCode().split(",")[0]), 
-                searchForm.getSearch(),
-                searchForm.getPageNumber(),
-                searchForm.getPageSize(),
-                searchForm.getOrderBy(),
-                searchForm.getDir());
-    }
 
-    private List<LabResult> getAllLabResults(SearchForm searchForm) {
-        return labResultService.getAll(
-                searchForm.getStartLocalDate(),
-                searchForm.getEndLocalDate(),
-                searchForm.getNormalizedRequestId(),
-                searchForm.getLabResultStatus(),
-                searchForm.getNotProcessingCauseEnum(),
-                searchForm.getTypeOfResultEnum(),
-                searchForm.getNid(),
-                searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
-                        ? labResultService.getHealthFacilityLabCodes()
-                        : Arrays.asList(searchForm.getSismaCode().split(",")[0]));
-    }
+	private Page<LabResult> searchLabResults(SearchForm searchForm) {
+
+		return labResultService.search(searchForm.getStartLocalDate(), searchForm.getEndLocalDate(),
+				searchForm.getNormalizedRequestId(), searchForm.getLabResultStatus(),
+				searchForm.getNotProcessingCauseEnum(), searchForm.getTypeOfResultEnum(), searchForm.getNid(),
+				searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
+						? labResultService.getHealthFacilityLabCodes()
+						: Arrays.asList(searchForm.getSismaCode().split(",")[0]),
+				searchForm.getSearch(), searchForm.getPageNumber(), searchForm.getPageSize(), searchForm.getOrderBy(),
+				searchForm.getDir());
+
+	}
+
+	private List<LabResult> getAllLabResults(SearchForm searchForm) {
+		return labResultService.getAll(searchForm.getStartLocalDate(), searchForm.getEndLocalDate(),
+				searchForm.getNormalizedRequestId(), searchForm.getLabResultStatus(),
+				searchForm.getNotProcessingCauseEnum(), searchForm.getTypeOfResultEnum(), searchForm.getNid(),
+				searchForm.getSismaCode().split(",")[0].equals(Constants.ALL)
+						? labResultService.getHealthFacilityLabCodes()
+						: Arrays.asList(searchForm.getSismaCode().split(",")[0]));
+	}
 }
