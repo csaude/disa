@@ -22,14 +22,10 @@ public class DisaUserPropertyUtil {
 
 	public static List<String> validateSismaCode(List<String> validCodes) {
 
-		List<String> mutableValidCodes = new ArrayList<>(getUserOrgUnitCodes());
+	    List<String> mutableValidCodes = new ArrayList<>(getUserOrgUnitCodes());
 
-	    
-	    if(validCodes.equals(mutableValidCodes)) {
-	    	return validCodes;	
-	    }else {
-	    mutableValidCodes.removeAll(validCodes);
-	    }
+	    mutableValidCodes.retainAll(validCodes);
+
 	    return mutableValidCodes;
 	}
 
