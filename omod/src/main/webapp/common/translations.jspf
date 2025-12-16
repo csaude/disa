@@ -12,6 +12,7 @@
 		"disa.manage.actions": "<spring:message htmlEscape='false' code='disa.manage.actions' />",
 		"disa.viral.load.status.PROCESSED": "<openmrs:message code='disa.viral.load.status.PROCESSED' />",
 		"disa.viral.load.status.NOT_PROCESSED": "<openmrs:message code='disa.viral.load.status.NOT_PROCESSED' />",
+	    "disa.viral.load.status.REJECTED": "<spring:message code='disa.viral.load.status.REJECTED'/>",
 		"disa.viral.load.status.PENDING": "<openmrs:message code='disa.viral.load.status.PENDING' />",
 		"disa.notProcessingCause.NID_NOT_FOUND": "<openmrs:message code='disa.notProcessingCause.NID_NOT_FOUND' />",
 		"disa.notProcessingCause.INVALID_RESULT": "<openmrs:message code='disa.notProcessingCause.INVALID_RESULT'/>",

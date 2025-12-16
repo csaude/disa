@@ -371,4 +371,17 @@
 			<where>property = 'disa.api.username' OR property = 'disa.api.password'</where>
 		</delete>
     </changeSet>
+    <changeSet id="add-fields-to-disa-sync-log" author="helio.machabane">
+    	<preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="disa_sync_log" columnName="firstname"/>
+            </not>
+        </preConditions>
+		<addColumn tableName="disa_sync_log">
+            <column name="firstname" type="varchar(100)"/>
+            <column name="lastname" type="varchar(100)"/>
+            <column name="result_status" type="varchar(50)"/>
+            <column name="rejected_description" type="varchar(255)"/>
+        </addColumn>
+	</changeSet>
 </databaseChangeLog>

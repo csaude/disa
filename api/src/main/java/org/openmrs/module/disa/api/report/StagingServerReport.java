@@ -37,6 +37,7 @@ public class StagingServerReport {
     private static final int CREATED_AT = 13;
     private static final int UPDATED_AT = 14;
     private static final int NOT_PROCESSING_CAUSE = 15;
+    private static final int REJECTION_DESCRIPTION = 16; 
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -75,6 +76,7 @@ public class StagingServerReport {
         sheet.autoSizeColumn(CREATED_AT);
         sheet.autoSizeColumn(UPDATED_AT);
         sheet.autoSizeColumn(NOT_PROCESSING_CAUSE);
+        sheet.autoSizeColumn(REJECTION_DESCRIPTION); 
     }
 
     public byte[] generateReport() throws IOException {
@@ -158,6 +160,11 @@ public class StagingServerReport {
         cellViralLoadProcessing.setCellStyle(cellStyle);
         cellViralLoadProcessing
                 .setCellValue(messageSourceService.getMessage("disa.notProcessingCause"));
+        
+        Cell cellRejectionDescription = row.createCell(REJECTION_DESCRIPTION);
+        cellRejectionDescription.setCellStyle(cellStyle);
+        cellRejectionDescription
+                .setCellValue(messageSourceService.getMessage("disa.rejectionDescription"));  
     }
 
     private void addLabResultRow(LabResult disa, Row row) {
@@ -212,6 +219,11 @@ public class StagingServerReport {
         if (disa.getNotProcessingCause() != null) {
             cell.setCellValue(
                     messageSourceService.getMessage("disa.notProcessingCause." + disa.getNotProcessingCause()));
+        }
+        
+        cell = row.createCell(REJECTION_DESCRIPTION);
+        if (disa.getRejectedReason() !=null) {
+        	cell.setCellValue(disa.getRejectedReason());  
         }
     }
 }

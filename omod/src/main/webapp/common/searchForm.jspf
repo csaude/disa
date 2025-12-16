@@ -58,6 +58,9 @@
 				<form:option value="PROCESSED">
 					<openmrs:message code="disa.viral.load.status.PROCESSED" />
 				</form:option>
+				<form:option value="REJECTED">
+					<openmrs:message code="disa.viral.load.status.REJECTED" />
+				</form:option>
 			</form:select>
 		</div>
 		<div>

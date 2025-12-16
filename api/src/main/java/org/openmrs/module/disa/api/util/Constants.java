@@ -186,4 +186,6 @@ public class Constants {
 	public static final String LEVEL_4 = "16c13c13-2f85-4492-ae9b-4358b34070e7";
 	public static final String CRAG = "f3883e12-4883-461b-8440-2a02f3312a84";
 	public static final String TBLAM_GROUP = "9a9377fd-f528-402c-b412-7d04988fba01";
+	
+	public static final String AMOSTRA_REJEITADA = "amostra_rejeitada"; 
 }
