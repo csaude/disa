@@ -28,8 +28,8 @@ public class SyncLog implements Serializable {
 	@Column(name = "patient_id")
 	private Integer patientId;
 
-	@OneToOne
-	@JoinColumn(name = "encounter_id")
+	@OneToOne(optional = true)
+	@JoinColumn(name = "encounter_id", nullable = true)
 	private Encounter encounter;
 
 	@Column(name = "patient_identifier")
@@ -44,9 +44,21 @@ public class SyncLog implements Serializable {
 	@Column(name = "date_created")
 	private Date dateCreated;
 
-	@Column(name = "type_of_result")
+	@Column(name = "type_of_result", nullable = true)
 	@Enumerated(EnumType.STRING)
 	private TypeOfResult typeOfResult;
+	
+	@Column(name = "lastname")
+	private String lastName;
+	
+	@Column(name = "firstname")
+	private String firstName;
+	
+	@Column(name = "result_status")
+	private String syncStatus;
+	
+	@Column(name = "rejected_description")
+	private String rejectedDescription;
 
 	public SyncLog() {
 	}
@@ -112,32 +124,43 @@ public class SyncLog implements Serializable {
 		return this.equals(new SyncLog(labResult.getRequestId(), labResult.getTypeOfResult()));
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((requestId == null) ? 0 : requestId.hashCode());
-		result = prime * result + ((typeOfResult == null) ? 0 : typeOfResult.hashCode());
-		return result;
+	public TypeOfResult getTypeOfResult() {
+		return typeOfResult;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SyncLog other = (SyncLog) obj;
-		if (requestId == null) {
-			if (other.requestId != null)
-				return false;
-		} else if (!requestId.equals(other.requestId))
-			return false;
-		if (typeOfResult != other.typeOfResult)
-			return false;
-		return true;
+	public void setTypeOfResult(TypeOfResult typeOfResult) {
+		this.typeOfResult = typeOfResult;
 	}
 
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getSyncStatus() {
+		return syncStatus;
+	}
+
+	public void setSyncStatus(String syncStatus) {
+		this.syncStatus = syncStatus;
+	}
+
+	public String getRejectedDescription() {
+		return rejectedDescription;
+	}
+
+	public void setRejectedDescription(String rejectedDescription) {
+		this.rejectedDescription = rejectedDescription;
+	}
 }

@@ -326,111 +326,149 @@ async function ResultsTable(el, { locale, totalResults }) {
         },
       },
       // Manage column
-      {
-        data: null,
-        className: "actions",
-        orderable: false,
-        render: (data, type, row, meta) => {
-          // If processed render nothing
-          if (row.labResultStatus === "PROCESSED") {
-            return null;
-          }
+	  {
+	    data: null,
+	    className: "actions",
+	    orderable: false,
+	    render: (data, type, row, meta) => {
+	      // 1) PROCESSED → nada
+	      if (row.labResultStatus === "PROCESSED") {
+	        return null;
+	      }
 
-          const span = document.createElement("span");
+	      // 2) REJECTED → mostrar apenas REMOVER
+	      if (row.labResultStatus === "REJECTED") {
+	        if (
+	          !hasPrivilege(
+	            user,
+	            "Remover resultados no Disa Interoperabilidade"
+	          )
+	        ) {
+	          return null; // Sem privilégios → nada
+	        }
 
-          // Base tooltip element
-          const tooltip = document.createElement("div");
-          tooltip.className = "actions-tooltip";
+	        const span = document.createElement("span");
+	        span.appendChild(document.createTextNode(t["disa.manage.actions"]));
 
-          // Arrow
-          const arrow = document.createElement("div");
-          arrow.className = "arrow";
+	        const tooltip = document.createElement("div");
+	        tooltip.className = "actions-tooltip";
 
-          // Actions list
-          const ul = document.createElement("ul");
+	        const arrow = document.createElement("div");
+	        arrow.className = "arrow";
 
-          if (row.labResultStatus === "NOT_PROCESSED") {
-            // Reschedule
-            if (
-              hasPrivilege(
-                user,
-                "Reagendar resultados no Disa Interoperabilidade"
-              )
-            ) {
-              const reschedule = document.createElement("li");
-              const rescheduleLink = document.createElement("a");
-              rescheduleLink.href = "#";
-              rescheduleLink.className = "reschedule-vl";
-              rescheduleLink.dataset.id = data.id;
-              rescheduleLink.appendChild(
-                document.createTextNode(t["disa.viralload.reschedule"])
-              );
-              reschedule.appendChild(rescheduleLink);
-              ul.appendChild(reschedule);
-            }
+	        const ul = document.createElement("ul");
 
-            // Map NID
-            if (row.notProcessingCause == "NID_NOT_FOUND") {
-              if (
-                hasPrivilege(
-                  user,
-                  "Mapear pacientes no Disa Interoperabilidade"
-                )
-              ) {
-                const map = document.createElement("li");
-                const mapLink = document.createElement("a");
-                mapLink.href = `managelabresults/${data.id}/map.form`;
-                mapLink.appendChild(document.createTextNode(t["disa.map.nid"]));
-                map.appendChild(mapLink);
-                ul.appendChild(map);
-              }
-            }
-          }
+	        // Remover
+	        const deleteLi = document.createElement("li");
+	        const deleteLink = document.createElement("a");
+	        deleteLink.href = "#";
+	        deleteLink.className = "delete-vl";
+	        deleteLink.dataset.requestid = row.requestId;
+	        deleteLink.dataset.id = data.id;
+	        deleteLink.appendChild(
+	          document.createTextNode(t["disa.viralload.delete"])
+	        );
+	        deleteLi.appendChild(deleteLink);
+	        ul.appendChild(deleteLi);
 
-          // Reallocate
-          if (
-            hasPrivilege(user, "Realocar resultados no Disa Interoperabilidade")
-          ) {
-            const reallocate = document.createElement("li");
-            const reallocateLink = document.createElement("a");
-            reallocateLink.href = `managelabresults/${data.id}/reallocate.form`;
-            reallocateLink.appendChild(
-              document.createTextNode(t["disa.viralload.reallocate"])
-            );
-            reallocate.appendChild(reallocateLink);
-            ul.appendChild(reallocate);
-          }
+	        tooltip.appendChild(arrow);
+	        tooltip.appendChild(ul);
+	        span.appendChild(tooltip);
 
-          // Void
-          if (
-            hasPrivilege(user, "Remover resultados no Disa Interoperabilidade")
-          ) {
-            const delete_ = document.createElement("li");
-            const deleteLink = document.createElement("a");
-            deleteLink.href = "#";
-            deleteLink.className = "delete-vl";
-            deleteLink.dataset.requestid = row.requestId;
-            deleteLink.dataset.id = data.id;
-            deleteLink.appendChild(
-              document.createTextNode(t["disa.viralload.delete"])
-            );
-            delete_.appendChild(deleteLink);
-            ul.appendChild(delete_);
-          }
+	        return span.outerHTML;
+	      }
 
-          // If no actions available don't display tooltip
-          if (!ul.children.length) {
-            return null;
-          }
+	      // 3) OUTROS ESTADOS (ex: NOT_PROCESSED)
+	      const span = document.createElement("span");
 
-          span.appendChild(document.createTextNode(t["disa.manage.actions"]));
-          span.appendChild(tooltip);
-          tooltip.appendChild(arrow);
-          tooltip.appendChild(ul);
+	      const tooltip = document.createElement("div");
+	      tooltip.className = "actions-tooltip";
 
-          return span.outerHTML;
-        },
-      },
+	      const arrow = document.createElement("div");
+	      arrow.className = "arrow";
+
+	      const ul = document.createElement("ul");
+
+	      // NOT_PROCESSED → reagendar + mapear NID
+	      if (row.labResultStatus === "NOT_PROCESSED") {
+	        if (
+	          hasPrivilege(
+	            user,
+	            "Reagendar resultados no Disa Interoperabilidade"
+	          )
+	        ) {
+	          const reschedule = document.createElement("li");
+	          const rescheduleLink = document.createElement("a");
+	          rescheduleLink.href = "#";
+	          rescheduleLink.className = "reschedule-vl";
+	          rescheduleLink.dataset.id = data.id;
+	          rescheduleLink.appendChild(
+	            document.createTextNode(t["disa.viralload.reschedule"])
+	          );
+	          reschedule.appendChild(rescheduleLink);
+	          ul.appendChild(reschedule);
+	        }
+
+	        if (row.notProcessingCause === "NID_NOT_FOUND") {
+	          if (
+	            hasPrivilege(
+	              user,
+	              "Mapear pacientes no Disa Interoperabilidade"
+	            )
+	          ) {
+	            const map = document.createElement("li");
+	            const mapLink = document.createElement("a");
+	            mapLink.href = `managelabresults/${data.id}/map.form`;
+	            mapLink.appendChild(document.createTextNode(t["disa.map.nid"]));
+	            map.appendChild(mapLink);
+	            ul.appendChild(map);
+	          }
+	        }
+	      }
+
+	      // Realocar → somente se NÃO FOR REJECTED
+	      if (
+	        hasPrivilege(user, "Realocar resultados no Disa Interoperabilidade")
+	      ) {
+	        const reallocateLi = document.createElement("li");
+	        const reallocateLink = document.createElement("a");
+	        reallocateLink.href = `managelabresults/${data.id}/reallocate.form`;
+	        reallocateLink.appendChild(
+	          document.createTextNode(t["disa.viralload.reallocate"])
+	        );
+	        reallocateLi.appendChild(reallocateLink);
+	        ul.appendChild(reallocateLi);
+	      }
+
+	      // Remover
+	      if (
+	        hasPrivilege(user, "Remover resultados no Disa Interoperabilidade")
+	      ) {
+	        const deleteLi = document.createElement("li");
+	        const deleteLink = document.createElement("a");
+	        deleteLink.href = "#";
+	        deleteLink.className = "delete-vl";
+	        deleteLink.dataset.requestid = row.requestId;
+	        deleteLink.dataset.id = data.id;
+	        deleteLink.appendChild(
+	          document.createTextNode(t["disa.viralload.delete"])
+	        );
+	        deleteLi.appendChild(deleteLink);
+	        ul.appendChild(deleteLi);
+	      }
+
+	      if (!ul.children.length) {
+	        return null;
+	      }
+
+	      span.appendChild(document.createTextNode(t["disa.manage.actions"]));
+	      span.appendChild(tooltip);
+	      tooltip.appendChild(arrow);
+	      tooltip.appendChild(ul);
+
+	      return span.outerHTML;
+	    },
+	  },
     ],
     ajax: {
       headers: {

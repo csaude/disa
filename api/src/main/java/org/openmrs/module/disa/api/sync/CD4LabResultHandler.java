@@ -67,7 +67,8 @@ public class CD4LabResultHandler extends BaseLabResultHandler {
     private void validateResult(CD4LabResult cd4) {
         boolean valid = true;
         try {
-            if (cd4.getFinalResult() == null || cd4.getFinalResult().isEmpty()) {
+            if (cd4.getFinalResult() == null 
+            		|| cd4.getFinalResult().isEmpty()) { 
                 valid = false;
             } else {
                 String normalized = cd4.getFinalResult()

@@ -142,20 +142,40 @@ public class DisaServiceImpl extends BaseOpenmrsService implements DisaService {
 				Collections.singletonList(disa.getHealthFacilityLabCode()));
 	}
 
-	public void handleProcessedLabResult(LabResult labResult, Encounter encounter) {
-		encounterService.saveEncounter(encounter);
+	public void handleProcessedAndRejectedLabResult(LabResult labResult, Encounter encounter) {
+		
+		boolean isRejected = labResult.getLabResultStatus() == LabResultStatus.REJECTED;
+		
+		if (!isRejected) {
+	        encounterService.saveEncounter(encounter);
+	    }
 
 		SyncLog fsrLog = new SyncLog();
-		fsrLog.setPatientId(encounter.getPatient().getPatientId());
-		fsrLog.setEncounter(encounter);
+		
+		if (!isRejected) {
+	        fsrLog.setPatientId(encounter.getPatient().getPatientId());
+	        fsrLog.setEncounter(encounter);
+	    } else {
+	        fsrLog.setPatientId(null);
+	        fsrLog.setEncounter(null);
+	    }
+		
 		fsrLog.setPatientIdentifier(labResult.getNid());
 		fsrLog.setRequestId(labResult.getRequestId());
 		fsrLog.setCreator(Context.getAuthenticatedUser().getId());
 		fsrLog.setDateCreated(new Date());
 		fsrLog.setTypOfResult(labResult.getTypeOfResult());
+		fsrLog.setLastName(labResult.getLastName());
+		fsrLog.setFirstName(labResult.getFirstName());
+		fsrLog.setSyncStatus(labResult.getLabResultStatus().name());
+		fsrLog.setRejectedDescription(labResult.getRejectedReason());
+		
 		saveSyncLog(fsrLog);
 
-		labResult.setEncounterId(encounter.getEncounterId());
+		if (!isRejected) {
+	        labResult.setEncounterId(encounter.getEncounterId());
+	    }
+		
 		labResultService.updateLabResult(labResult);
 	}
 

@@ -39,10 +39,10 @@ public class FinalLabResultHandler extends BaseLabResultHandler {
     public LabResultStatus handle(LabResult labResult) {
         if (labResult.isNotProcessed()) {
             handleNotProcessed(labResult);
-        } else if (labResult.isProcessed()) {
-            handleProcessed(labResult);
+        } else if (labResult.isProcessed() || labResult.isRejected()) { 
+            handleProcessedAndRejected(labResult);
         } else {
-            logger.debug("LabResultStatus is neither PROCESSED or NOT_PROCESSED, skipping");
+            logger.debug("LabResultStatus is neither PROCESSED, REJECTED or NOT_PROCESSED, skipping");
         }
         // Terminate the chain
         return labResult.getLabResultStatus();
@@ -52,13 +52,20 @@ public class FinalLabResultHandler extends BaseLabResultHandler {
         labResultService.updateLabResult(labResult);
     }
 
-    private void handleProcessed(LabResult labResult) {
+    private void handleProcessedAndRejected(LabResult labResult) {
+    	
+    	if (labResult.isRejected()) {
+            disaService.handleProcessedAndRejectedLabResult(labResult, null);
+            clearSyncContext();
+            return;
+        }
+    	
         Encounter encounter = (Encounter) getSyncContext().get(ENCOUNTER_KEY);
         if (encounter == null) {
             throw new DisaModuleAPIException(ENCOUNTER_KEY + " is missing from the sync context");
         }
 
-        disaService.handleProcessedLabResult(labResult, encounter);
+        disaService.handleProcessedAndRejectedLabResult(labResult, encounter);
 
         // Clear the sync context
         clearSyncContext();

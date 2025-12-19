@@ -122,7 +122,9 @@ public class ManageLabResultsController {
     @ResponseBody
     @RequestMapping(value = "managelabresults/json.form", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String searchJson(@Valid SearchForm searchForm) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(searchLabResults(searchForm));
+    	String json = objectMapper.writeValueAsString(searchLabResults(searchForm));
+    	log.info("JSON Response: {}", json);
+    	return json;
     }
 
     @RequestMapping(value = "managelabresults/export.form", method = RequestMethod.GET)

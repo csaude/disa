@@ -46,7 +46,8 @@ public class CRAGLabResultHandler extends BaseLabResultHandler {
             CRAGLabResult crag = (CRAGLabResult) labResult;
 
             boolean valid = false;
-            if (crag.getFinalResult() != null && !crag.getFinalResult().isEmpty()) {
+            if (crag.getFinalResult() != null 
+            		&& !crag.getFinalResult().isEmpty()) {
                 boolean negative = crag.getFinalResult().contains("Negativ");
                 boolean positive = crag.getFinalResult().contains("Positiv");
 

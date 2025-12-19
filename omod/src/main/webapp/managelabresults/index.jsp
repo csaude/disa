@@ -121,53 +121,81 @@
 							<td>${labResult.createdAt.toString().substring(0,10)}</td>
 							<td>${labResult.updatedAt.toString().substring(0,10)}</td>
 							<td>${labResult.notProcessingCause}</td>
-							<td class="actions" style="text-align: center;">
-								<c:if test="${labResult.labResultStatus != 'PROCESSED'}">
+<td class="actions" style="text-align: center;">
 
-									<openmrs:message
-											code="disa.manage.actions" />
+    <!-- ===================== -->
+    <!-- CASO SEJA REJECTED -->
+    <!-- ===================== -->
+    <c:if test="${labResult.labResultStatus == 'REJECTED'}">
 
-									<div class="actions-tooltip" role="tooltip">
-										<div class="arrow" data-popper-arrow></div>
-										<ul>
-											<c:if test="${labResult.labResultStatus == 'NOT_PROCESSED'}">
-												<openmrs:hasPrivilege privilege="Reagendar resultados no Disa Interoperabilidade">
-													<li>
-														<a href="#" data-id="${labResult.id}"
-															class="reschedule-vl">
-															<spring:message code="disa.viralload.reschedule" />
-														</a>
-													</li>
-												</openmrs:hasPrivilege>
-												<c:if test="${labResult.notProcessingCause == 'NID_NOT_FOUND'}">
-													<openmrs:hasPrivilege privilege="Mapear pacientes no Disa Interoperabilidade">
-														<li>
-															<a href='managelabresults/${labResult.id}/map.form'>
-																<spring:message code="disa.map.nid" />
-															</a>
-														</li>
-													</openmrs:hasPrivilege>
-												</c:if>
-											</c:if>
-											<openmrs:hasPrivilege privilege="Realocar resultados no Disa Interoperabilidade">
-												<li>
-													<a href="managelabresults/${labResult.id}/reallocate.form">
-														<spring:message code="disa.viralload.reallocate" />
-													</a>
-												</li>
-											</openmrs:hasPrivilege>
-											<openmrs:hasPrivilege privilege="Remover resultados no Disa Interoperabilidade">
-												<li>
-													<a href="#" data-id="${labResult.id}"
-														class="delete-vl">
-														<spring:message code="disa.viralload.delete" />
-													</a>
-												</li>
-											</openmrs:hasPrivilege>
-										</ul>
-									</div>
-								</c:if>
-							</td>
+        <ul>
+            <openmrs:hasPrivilege privilege="Remover resultados no Disa Interoperabilidade">
+                <li>
+                    <a href="#" data-id="${labResult.id}" class="delete-vl">
+                        <spring:message code="disa.viralload.delete"/>
+                    </a>
+                </li>
+            </openmrs:hasPrivilege>
+        </ul>
+
+    </c:if>
+
+
+
+    <!-- ========================================= -->
+    <!-- CASO NÃO SEJA REJECTED: MOSTRA O BLOCO NORMAL -->
+    <!-- ========================================= -->
+    <c:if test="${labResult.labResultStatus != 'REJECTED'}">
+
+        <openmrs:message code="disa.manage.actions" />
+
+        <div class="actions-tooltip" role="tooltip">
+            <div class="arrow" data-popper-arrow></div>
+            <ul>
+
+                <c:if test="${labResult.labResultStatus == 'NOT_PROCESSED'}">
+                    <openmrs:hasPrivilege privilege="Reagendar resultados no Disa Interoperabilidade">
+                        <li>
+                            <a href="#" data-id="${labResult.id}" class="reschedule-vl">
+                                <spring:message code="disa.viralload.reschedule"/>
+                            </a>
+                        </li>
+                    </openmrs:hasPrivilege>
+
+                    <c:if test="${labResult.notProcessingCause == 'NID_NOT_FOUND'}">
+                        <openmrs:hasPrivilege privilege="Mapear pacientes no Disa Interoperabilidade">
+                            <li>
+                                <a href="managelabresults/${labResult.id}/map.form">
+                                    <spring:message code="disa.map.nid"/>
+                                </a>
+                            </li>
+                        </openmrs:hasPrivilege>
+                    </c:if>
+                </c:if>
+
+                <openmrs:hasPrivilege privilege="Realocar resultados no Disa Interoperabilidade">
+                    <li>
+                        <a href="managelabresults/${labResult.id}/reallocate.form">
+                            <spring:message code="disa.viralload.reallocate"/>
+                        </a>
+                    </li>
+                </openmrs:hasPrivilege>
+
+                <openmrs:hasPrivilege privilege="Remover resultados no Disa Interoperabilidade">
+                    <li>
+                        <a href="#" data-id="${labResult.id}" class="delete-vl">
+                            <spring:message code="disa.viralload.delete"/>
+                        </a>
+                    </li>
+                </openmrs:hasPrivilege>
+
+            </ul>
+        </div>
+
+    </c:if>
+
+</td>
+
 						</tr>
 					</c:forEach>
 				</tbody>
