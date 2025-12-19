@@ -186,7 +186,6 @@ public class SearchForm {
     }
 
     public TypeOfResult getTypeOfResultEnum() {
-    	System.out.println("Qual eh o valor do typeOfResult aqui? " + typeOfResult); 
         return typeOfResult == null || Constants.ALL.equals(typeOfResult) ? null : TypeOfResult.valueOf(typeOfResult); 
     }
     
